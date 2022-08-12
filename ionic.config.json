@@ -1,0 +1,7 @@
+{
+  "name": "Sigess app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
