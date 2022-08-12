@@ -1,0 +1,20 @@
+<ion-card *ngFor="let analisis of analisisDesvList; let i = index">
+    <ion-item>
+        <ion-button *ngIf="analisis['sync'] != true" fill="outline" (click)="sincronizar(analisis, i)">
+            {{analisis.fechaElaboracion | date:'dd/MM/yyyy HH:mm'}}
+        </ion-button>
+        <ion-spinner slot="start" class="main-spinner" name="dots" *ngIf="analisis['sync'] == true" color="primary"></ion-spinner>
+
+        <ion-button *ngIf="analisis['sync'] != true" fill="clear" slot="end" (click)="presentAlertConfirm(analisis, i)" color="medium">
+            <ion-icon name="close"></ion-icon>
+        </ion-button>
+    </ion-item>
+    <ion-card-header>
+        <ion-card-subtitle>
+            <p *ngFor="let desv of analisis.desviacionesList">{{desv.hashId}}</p>
+        </ion-card-subtitle>
+        <ion-card-subtitle>
+            {{analisis.observacion}}
+        </ion-card-subtitle>
+    </ion-card-header>
+</ion-card>

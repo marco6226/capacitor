@@ -1,0 +1,72 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="anterior()">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Fechas</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-card>
+        <ion-card-content>
+            <ion-item>
+                <ion-label position="stacked">Nombre</ion-label>
+                <ion-input [(ngModel)]="nombreRango"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">Desde</ion-label>
+                <ion-datetime display-format="DD MMM YYYY" [(ngModel)]="fechaDesde"></ion-datetime>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">Hasta</ion-label>
+                <ion-datetime display-format="DD MMM YYYY" [(ngModel)]="fechaHasta"></ion-datetime>
+            </ion-item>
+            <ion-button (click)="adicionarNuevoRango()" size="small" fill="outline" slot="end" [disabled]="fechaDesde == null || fechaHasta == null"
+                *ngIf="idxRangoEdit == -1">
+                <ion-icon name="add-circle-outline"></ion-icon>
+                Adicionar rango
+            </ion-button>
+            <ion-button color="success" size="small" (click)="actualizarRango()" fill="outline" slot="end" *ngIf="idxRangoEdit > -1">
+                <ion-icon name="create"></ion-icon>
+                Actualizar
+            </ion-button>
+            <ion-button *ngIf="idxRangoEdit >= 0" size="small" (click)="cancelarEdicion()" fill="outline" color="medium" slot="end">Cancelar</ion-button>
+
+            <ion-list>
+                <ion-item-sliding *ngFor="let rango of rangosList;let idx = index;">
+                    <ion-item-options side="end">
+                        <ion-item-option color="success" (click)="editarRango(rango, idx)">
+                            <ion-icon name="create"></ion-icon>
+                        </ion-item-option>
+                        <ion-item-option (click)="removerRango(idx)">
+                            <ion-icon name="close"></ion-icon>
+                        </ion-item-option>
+                    </ion-item-options>
+                    <ion-item >
+                        <ion-label>
+                            <h6>{{rango.nombre}}</h6>
+                            <p color="light">{{rango.desde | date:'dd/MM/yyyy'}} - {{rango.hasta | date:'dd/MM/yyyy'}}</p>
+                        </ion-label>
+                    </ion-item>
+                </ion-item-sliding>
+            </ion-list>
+        </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+        <ion-card-content>
+            <div *ngFor="let ds of datasets" (click)="inpColor.click()" [style.border-bottom-color]="ds.backgroundColor" class="borde-series">
+                <input #inpColor type="color" slot="end" [(ngModel)]="ds.backgroundColor" (change)="cambiarColor($event)" style="display: none;">                {{ds.label}}
+            </div>
+        </ion-card-content>
+    </ion-card>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button (click)="aceptar()" [disabled]="rangosList == null || rangosList.length == 0">
+            <ion-icon name="checkmark"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+</ion-content>

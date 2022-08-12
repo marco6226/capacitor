@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="navegar('/app/home')">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{nombreAuc}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+  <ion-segment (ionChange)="segmentChanged($event)" value="tarjeta">
+    <ion-segment-button value="tarjeta">
+      <ion-label>Tarjetas</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="consultar">
+      <ion-label>Consultar</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="observ">
+      <ion-label>Sincronizar<ion-badge *ngIf="obsCount > 0" color="warning">{{obsCount}}</ion-badge>
+      </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <sm-observacionSync [style.display]="segments['observ'] ? 'block':'none'" #obserSyncComp (onEvent)="onEvent($event)"></sm-observacionSync>
+
+  <div [style.display]="segments['tarjeta'] ? 'block':'none'">
+
+    <div *ngIf="loading == true">
+      <ion-spinner class="main-spinner" name="dots" color="primary"></ion-spinner>
+    </div>
+
+    <div *ngIf="tarjetasCargadas == false">
+      <p style="color:#888;padding:25px">
+        No fue posible cargar las tarjetas de observación.
+        <a (click)="cargarTarjetas()">Reintentar</a>
+      </p>
+    </div>
+  </div>
+  
+  <app-observacion-tarjetas [style.display]="segments['tarjeta'] ? 'block':'none'"></app-observacion-tarjetas>
+  <app-observacion-consultar [style.display]="segments['consultar'] ? 'block':'none'"></app-observacion-consultar>
+  
+</ion-content>

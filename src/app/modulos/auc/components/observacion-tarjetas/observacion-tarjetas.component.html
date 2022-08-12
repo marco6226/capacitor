@@ -1,0 +1,10 @@
+<ion-card *ngFor="let tarjeta of tarjetaList">
+  <ion-item>
+    <ion-label>{{tarjeta.nombre}}</ion-label>
+    <ion-button  shape="round" slot="end" (click)="onTarjetaSelect(tarjeta)" *sTienePermiso="['EMP_GET_AREA', 'SEC_GET_SCRDEF']">Registrar</ion-button>
+  </ion-item>
+  <ion-card-content>
+    <p>{{tarjeta.codigo}} </p>
+    <p>{{tarjeta.descripcion}} </p>
+  </ion-card-content>
+</ion-card>

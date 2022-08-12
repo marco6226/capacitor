@@ -1,0 +1,81 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="salir()">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Acta</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <div *ngIf="guardando == true" style="width: 320px; margin:auto; text-align: center;">
+        <h6>Guardando acta, por favor espere...</h6>
+        <ion-spinner class="main-spinner" name="dots" color="primary"></ion-spinner>
+    </div>
+
+    <div [style.display]="guardando != true ? 'block':'none'">
+        <ion-item>
+            <ion-label position="stacked">Nombre del acta*</ion-label>
+            <p style="width: 100%" *ngIf="esConsulta">{{nombre}}</p>
+            <ion-input *ngIf="!esConsulta" maxlength="126" [(ngModel)]="nombre"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label position="stacked">Descripcion</ion-label>
+            <p style="width: 100%" *ngIf="esConsulta">{{descripcion}}</p>
+            <ion-textarea *ngIf="!esConsulta" maxlength="510" [(ngModel)]="descripcion"></ion-textarea>
+        </ion-item>
+        <!-- <ion-item>
+            <ion-label position="stacked">Area*</ion-label>
+            <p style="width: 100%" *ngIf="esConsulta">{{area.nombre}}</p>
+
+            <div *ngIf="loading == true">
+                <ion-spinner slot="end" name="dots" color="primary"></ion-spinner>
+            </div>
+            <div *ngIf="areasCargadas == false">
+                <p style="color:#888;padding:25px">
+                    No fue posible cargar el listado
+                    <a *ngIf="areasCargadas == false" (click)="cargarAreas()">Reintentar</a>
+                </p>
+            </div>
+            <ion-select [(ngModel)]="area" [disabled]="esConsulta" *ngIf="!esConsulta && areasCargadas == true">
+                <ion-select-option *ngFor="let area of areasList" [value]="area" compareWith="id">{{area.nombre}}</ion-select-option>
+            </ion-select>
+
+        </ion-item> -->
+
+        <sm-areaSelector [areas]="areasList" [(ngModel)]="area" [disabled]="esConsulta" appendTo="ion-modal"></sm-areaSelector>
+
+        <input type="file" #fileChooser (change)="onFileSelect(fileChooser.files)" style="display: none;" />
+
+        <ion-button expand="full" (click)="openFileChooser()" *ngIf="!esConsulta">
+            <ion-icon name="document"></ion-icon>
+        </ion-button>
+        <ion-button expand="full" (click)="getPicture()" *ngIf="!esConsulta">
+            <ion-icon name="camera"></ion-icon>
+        </ion-button>
+
+        <ion-item *ngFor="let doc of archivosList;let idx = index">
+            <ion-icon slot="start" name="images" *ngIf="doc.ext == 'jpg' || doc.ext == 'jpeg' || doc.ext == 'png'"></ion-icon>
+            <ion-icon slot="start" name="document" *ngIf="doc.ext != 'jpg' && doc.ext != 'jpeg' && doc.ext != 'png'"></ion-icon>
+
+            <ion-input [(ngModel)]="doc.alias" *ngIf="!esConsulta"></ion-input>
+            <p style="width: 100%" *ngIf="esConsulta">{{doc.alias}}</p>
+
+            <ion-button slot="end" fill="clear" (click)="visualizar(doc)">
+                <ion-icon name="eye"></ion-icon>
+            </ion-button>
+            <ion-button slot="end" fill="clear" (click)="removerDoc(doc, idx)" *ngIf="!esConsulta" color="medium">
+                <ion-icon name="close"></ion-icon>
+            </ion-button>
+        </ion-item>
+    </div>
+
+    <div style="height: 150px;"></div>
+    <ion-fab *ngIf="!guardando && !esConsulta" vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button (click)="guardarActa()" [disabled]="nombre == null || area == null">
+            <ion-icon name="save"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+</ion-content>

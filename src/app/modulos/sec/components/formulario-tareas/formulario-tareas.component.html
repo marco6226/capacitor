@@ -1,0 +1,147 @@
+<ion-card>
+    <ion-card-content>
+        <div *ngFor="let tarea of tareasList; let i = index" [id]="'taritem_' + i" class="tarea-content">
+            <p style="margin-bottom: 10px">
+                <ion-button slot="end" (click)="cargarTarea(tarea, i)" color="success" fill="outline" size="small" *ngIf="readOnly != true && tarea.estado == 'NUEVO'">
+                    <ion-icon name="create"></ion-icon>
+                    Modificar
+                </ion-button>
+                <ion-button slot="end" (click)="eliminarTarea(tarea, i)" color="medium" style="float: right" fill="clear" size="small" *ngIf="readOnly != true && tarea.estado == 'NUEVO'">
+                    <ion-icon name="close"></ion-icon>
+                </ion-button>
+            </p>
+            <ion-badge
+                [ngClass]="{
+                    nueva: tarea.estado == 'NUEVO',
+                    realizada: tarea.estado == 'REALIZADA',
+                    finalizada: tarea.estado == 'FINALIZADA'
+                }"
+                >{{ tarea.estado }}</ion-badge
+            >
+            <h2>{{ tarea?.nombre }}</h2>
+            <p>Descripción: {{ tarea?.descripcion }}</p>
+            <p>Tipo de acción: {{ tarea?.tipoAccion }}</p>
+            <p>Jerarquia de control: {{ tarea?.jerarquia }}</p>
+            <p>Empleado responsable: {{ tarea?.empResponsable?.primerNombre }} {{ tarea?.empResponsable?.primerApellido }}</p>
+            <p>Fecha: {{ tarea?.fechaProyectada | date: 'dd/MM/yyyy' }}</p>
+            <p>Ubicación: {{ tarea.areaResponsable?.nombre }}</p>
+        </div>
+    </ion-card-content>
+</ion-card>
+
+<ion-card id="form-tareas" *ngIf="readOnly != true">
+    <ion-card-content>
+        <ion-item>
+            <ion-label position="stacked">Actividad*</ion-label>
+            <ion-input [(ngModel)]="nombre" maxlength="254"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label position="stacked">Descripcion</ion-label>
+            <ion-textarea [(ngModel)]="descripcion" maxlength="1022"></ion-textarea>
+        </ion-item>
+        <ion-item>
+            <ion-label position="stacked">Tipo acción*</ion-label>
+            <ion-select okText="Aceptar" cancelText="Cancelar" [(ngModel)]="tipoAccion">
+                <ion-select-option value="MEJORAMIENTO">Mejoramiento</ion-select-option>
+                <ion-select-option value="PREVENTIVO">Preventiva</ion-select-option>
+                <ion-select-option value="CORRECTIVO">Correctiva</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label position="stacked"> Jerarquía de Control </ion-label>
+            <ion-select okText="Aceptar" cancelText="Cancelar" [(ngModel)]="jerarquia">
+                <ion-select-option [value]="null">Todos</ion-select-option>
+                <ion-select-option value="Eliminación"> Eliminación </ion-select-option>
+                <ion-select-option value="Sustitución"> Sustitución </ion-select-option>
+                <ion-select-option value="Control de ingeniería"> Control de ingeniería </ion-select-option>
+                <ion-select-option value="Controles administrativos"> Controles administrativos </ion-select-option>
+                <ion-select-option value="Elementos de proteccion personal"> Elementos de protección personal </ion-select-option>
+                <!-- ¿Tildes o no? -->
+            </ion-select>
+        </ion-item>
+
+        <ion-item  *ngIf="selectionEmpleado" click="resetEmpleado()">
+            
+            <ion-label position="stacked" style="margin-bottom: 10px;">
+              <h3>Empleado</h3>
+              <ion-label>{{nombreEmpleado}}</ion-label>
+            </ion-label>
+            <ion-button  (click)="resetEmpleado()">
+                limpiar
+            </ion-button>
+
+        </ion-item>
+    
+            <ion-label *ngIf="!selectionEmpleado" position="stacked">
+                <h3>Empleado</h3>
+            </ion-label>
+            <sm-empleado-selector style="width: 98%" *ngIf="!selectionEmpleado" position="stacked" [(ngModel)]="empResponsable" [disabled]="guardando == true" appendTo="ion-modal" (changeSelection)="onSelection($event)"></sm-empleado-selector>
+       
+       <!--  <p-autoComplete
+            placeholder="Empleado"
+            (onSelect)="onSelection($event)"
+            [suggestions]="empleadosList"
+            (completeMethod)="buscarEmpleado($event)"
+            [(ngModel)]="_value"
+            *ngIf="_value?.id == null"
+        >
+        <ng-template let-empleado pTemplate="item">
+            <div class="ui-helper-clearfix">
+                <div class="wrapper">
+                    <i *ngIf="!empleado.usuario?.icon" class="fa fa-user-circle" style="font-size: 48px" aria-hidden="true"></i>
+                    <img *ngIf="empleado.usuario?.icon" [src]="empleado.usuario?.icon" style="border-radius: 50%" #imgAvatar />
+                    <div style="margin-left: 20px">
+                        <label>{{ empleado?.primerNombre }} {{ empleado?.segundoNombre }} {{ empleado?.primerApellido }}</label>
+                        <br />
+                        {{ empleado?.numeroIdentificacion }} <br />
+                        {{ empleado?.usuario.email }}
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+            
+        </p-autoComplete> -->
+
+        <ion-item>
+            <ion-label position="stacked">Fecha proyectada*</ion-label>
+            <ion-datetime
+             display-format="DD/MM/YYYY"
+             picker-format="YYYY MMMM DD"
+             cancelText="Cancelar"
+             doneText="Ok"                      
+             displayFormat="DD/MM/YYYY"
+             monthNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+              [(ngModel)]="fechaProyectada"
+              ></ion-datetime>
+        </ion-item>
+
+        <!-- <ion-item>
+            <ion-label position="stacked">Area responsable*</ion-label>
+
+            <div *ngIf="loading == true">
+                <ion-spinner slot="end" name="dots" color="primary"></ion-spinner>
+            </div>
+            <div *ngIf="areasCargadas == false">
+                <p style="color:#888;padding:25px">
+                    No fue posible cargar el listado
+                    <a *ngIf="areasCargadas == false" (click)="cargarAreas()">Reintentar</a>
+                </p>
+            </div>
+
+            <ion-select *ngIf="areasCargadas == true" okText="Aceptar" cancelText="Cancelar" [(ngModel)]="areaResp">
+                <ion-select-option *ngFor="let area of areasList" [value]="area">{{area.nombre}}</ion-select-option>
+            </ion-select>
+
+        </ion-item> -->
+       
+
+        <sm-areaSelector formControlName="areaResp"  [(ngModel)]="areaResp" appendTo="ion-modal"></sm-areaSelector>
+        
+        <ion-button *ngIf="idxTareaEditar < 0" expand="full" (click)="adicionarTarea()">Adicionar actividad</ion-button>
+        <ion-button *ngIf="idxTareaEditar >= 0" (click)="modificarTarea()" color="success">
+            <ion-icon name="create"></ion-icon>
+            Guardar
+        </ion-button>
+        <ion-button *ngIf="idxTareaEditar >= 0" (click)="cancelarEdicion()" color="light">Cancelar</ion-button>
+    </ion-card-content>
+</ion-card>

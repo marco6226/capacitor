@@ -1,0 +1,16 @@
+ion-segment-button {    
+
+    --indicator-box-shadow: transparent !important;
+    --background: white;
+    --color: black;
+    align-items: center;
+    --background-checked: linear-gradient(to right, #f4a942, #f4a942)!important;
+   //--background-checked: linear-gradient(to right, #495fff,#18c6ff)!important;
+    --color-checked: white;
+    border-radius: 15px !important;
+    padding: 0.375rem 0.1rem;
+    margin: 0;
+    white-space: nowrap;
+    margin-inline-start: 0.5rem;
+    font-size: 11px;
+  }

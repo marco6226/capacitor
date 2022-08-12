@@ -1,0 +1,53 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="navegar('/app/home')">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title (click)="cargarInspPendientes(true);">
+            Elaboración inspección
+            <!-- <ion-icon name="alert"></ion-icon> -->
+        </ion-title>
+        <ion-buttons slot="end">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-segment (ionChange)="segmentChanged($event)" value="listas" scrollable>
+        <ion-segment-button value="listas">
+            <ion-label> Listas </ion-label>
+        </ion-segment-button>
+
+        <ion-segment-button value="prog">
+            <ion-label> Programación </ion-label>
+        </ion-segment-button>
+
+        <ion-segment-button value="realizadas">
+            <ion-label> Realizadas Prog</ion-label>
+        </ion-segment-button>
+
+        <ion-segment-button value="noProgramadas">
+            <ion-label> Realizadas no Prog </ion-label>
+        </ion-segment-button>
+
+        <ion-segment-button value="insp">
+            <ion-label>
+                Sincronizar
+                <ion-badge *ngIf="inspCount > 0" color="warning">{{inspCount}}</ion-badge>
+            </ion-label>
+        </ion-segment-button>
+    </ion-segment>
+
+    <sm-inspeccionNoProgramada [style.display]="segments['listas'] ? 'block':'none'" (onListaSelect)="abrirInspeccion(null, $event, null)"></sm-inspeccionNoProgramada>
+
+    <sm-programacionInspecciones [style.display]="segments['prog'] ? 'block':'none'" (onProgramacionSelect)="abrirInspeccion($event, null, null)" #progInspComp></sm-programacionInspecciones>
+    
+    <sm-inspeccion-realizada [style.display]="segments['realizadas'] ? 'block':'none'" (onEvent)="onEvent($event)" #inspRealizadas></sm-inspeccion-realizada>
+
+    <sm-inspecciones-realizadas-no-progamadas [style.display]="segments['noProgramadas'] ? 'block':'none'" (onEvent)="onEvent($event)" #inspRealizadas></sm-inspecciones-realizadas-no-progamadas>
+
+    <sm-inspeccionesSync [style.display]="segments['insp'] ? 'block':'none'" (onEvent)="onEvent($event)" #inspSyncComp></sm-inspeccionesSync>
+</ion-content>

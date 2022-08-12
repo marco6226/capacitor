@@ -1,0 +1,105 @@
+<ion-content *ngIf="(!IsSeguimiento && !sinCierre)" style="font-size: large; text-align: center; height: 50px;">
+  <ion-label >Esta tarea no esta cerrada</ion-label>
+</ion-content>
+<ion-content style="bottom: 10px;" *ngIf="IsSeguimiento || sinCierre">
+      <ion-card class="tarjeta">
+        <ion-card-title>
+          <ion-item>
+            <ion-label class="tarjetaTitulo"  color="primary" >{{labelTitulo}}</ion-label>
+          </ion-item>
+        </ion-card-title>
+        <ion-card-content class="tarjetaContenido">     
+            
+          <ion-label class="subtitulos">{{labelCorreo}}</ion-label>
+          <ion-input class="inputText" [value]="user.email" readonly="true"></ion-input>
+              
+          <ion-label class="subtitulos">Nombres y apellidos</ion-label>
+          <ion-input class="inputText" [value]="nombreEmpleado" readonly="true"></ion-input>
+
+          <ion-label class="subtitulos">{{labelFecha}}</ion-label>
+          <ion-datetime
+            cancelText="Cancelar"
+            doneText="Ok"
+            [max]="maxDate"
+            [min]="minDate"
+            displayFormat="DD/MM/YYYY"
+            picker-format="DD, MMMM, YYYY"
+            monthNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+            [readonly]="isCerrado"
+            [(ngModel)]="selectDate"
+            (ionChange)="rangoFechaCierre($event)"
+          ></ion-datetime>
+          <ion-label class="subtitulos" required>{{labelDescripcion}}</ion-label>
+          <!-- <ion-input class="inputText" (ionChange)="change()" [(ngModel)]="value.descripcion_cierre" [readonly]="isCerrado"></ion-input> -->
+          <ion-input class="inputText" [(ngModel)]="valDescripcion" [readonly]="isCerrado"></ion-input>
+          
+    </ion-card-content>
+      </ion-card>
+      <ion-card class="tarjeta">
+        <ion-card-title>
+          <ion-item>
+            <ion-label class="tarjetaTitulo"  color="primary" >Evidencias</ion-label>
+          </ion-item>
+        </ion-card-title>
+        <ion-card-content class="tarjetaContenido">
+          
+          <ion-button color="primary" fill="outline" expand="block" (click)="getPicture()" *ngIf="!isCerrado">
+            <ion-icon slot="icon-only" name="camera"></ion-icon>
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="tarjeta">
+        <ion-card-content *ngFor="let img of imagenes;let i = index">
+            <td class="inputText">
+              <div>
+                <div class="img-toolbar">
+                  <ion-button slot="end" fill="clear" color="medium" (click)="presentRemoveImg(i)">
+                    <ion-icon name="close"></ion-icon>
+                  </ion-button>
+                </div>
+                <img [src]="img" />
+              </div>
+            </td> 
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-content *ngFor="let evidencia of evidencesCierre?.files">
+          <ion-img [src]="convertImg(evidencia)"></ion-img>
+        </ion-card-content>
+      </ion-card>
+
+</ion-content>
+
+  <ion-fab *ngIf="IsSeguimiento" vertical="bottom" horizontal="end" slot="fixed" class="buttonF">
+    <ion-fab-button (click)="guardarSeguimiento()">
+      <ion-icon name="save"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-fab *ngIf="IsSeguimiento" vertical="bottom" horizontal="start" slot="fixed" class="buttonF">
+    <ion-fab-button (click)="presentAlertaSalir()" color="light">
+      <ion-icon name="undo"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- <ion-fab vertical="bottom" horizontal="start" slot="fixed" 
+          *ngIf="Estado!='Cerrada fuera de tiempo' && Estado!='Cerrada en el tiempo' && isCierre">
+    <ion-fab-button (click)="guardarCierre()">
+      <ion-icon name="save" ></ion-icon>
+    </ion-fab-button>
+  </ion-fab> -->
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="buttonF"
+          *ngIf="Estado!='Cerrada fuera de tiempo' && Estado!='Cerrada en el tiempo' && sinCierre && !IsSeguimiento">
+    <ion-fab-button (click)="guardarCierre()">
+      <ion-icon name="save" ></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab *ngIf="Estado!='Cerrada fuera de tiempo' && Estado!='Cerrada en el tiempo' && !isCerrado && !sinCierre && !IsSeguimiento"
+          vertical="bottom" horizontal="end" slot="fixed" class="buttonF">
+  <ion-fab-button (click)="sinCierre=true">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

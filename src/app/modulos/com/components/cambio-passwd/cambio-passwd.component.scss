@@ -1,0 +1,22 @@
+.main{
+    padding: 15px;
+    position: fixed;
+	background-color: #eef2f6;
+	width: 100%;
+	height: 100%;
+    z-index: 1050;
+    top: 0px;
+}
+
+.msg-validacion{
+    color: crimson;
+    margin-left: 30px;
+    font-size: 12px;
+}
+
+.div-note{
+    width: 90%;
+    font-size: 12px;
+    margin: 10px;
+    overflow-wrap: break-word;
+}

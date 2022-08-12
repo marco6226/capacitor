@@ -1,0 +1,32 @@
+input{
+    width: 100%;
+    border: none;
+    background: #fff0;
+    margin-top: 10px;
+}
+
+textarea:focus, input:focus{
+    outline: none;
+}
+
+.options-div{
+    width: 0px;
+    height: 0px;;
+}
+
+.options-div div{
+    position: absolute;
+    // top: 58px;
+    top: 0px;
+    left: 0px;
+    box-shadow: 2px 2px 5px #aaa;
+    background: #eee;
+    width: 300px;
+}
+
+.options-div div button{
+    width: 300px;
+    height: 40px;
+    background-color: #fff0;
+    border-bottom: solid thin #ccc;
+}

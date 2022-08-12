@@ -1,0 +1,73 @@
+.ul-init{
+    height: inherit;
+    display: block;
+}
+
+sm-tree{
+    width: 100%;
+}
+
+ul{
+    padding-left: 15px;
+    list-style-type: none;
+    font-size: 13px;
+}
+
+.li-icon{
+    background:  url(/assets/images/arrow-right.svg) no-repeat;
+    background-position-y: 17px;
+    width: 20px;
+    height: 50px;
+    background-position: center;
+    background-size: 8px;
+    margin-right: 5px;
+}
+
+.li-expanded{
+    transform: rotate(90deg);
+}
+
+.li-selectable{
+    width: 35px;
+    height: 30px;
+    border-radius: 50%;
+    border: solid thin #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.li-selected{
+    background: url(/assets/images/check.svg) no-repeat;
+    background-size: 10px;
+    background-position: center;
+}
+
+
+li{
+    cursor: pointer;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 100%;
+}
+
+.ul-unexpanded{
+    height: 0px;
+    display: none;
+}
+
+.ul-expanded{
+
+}
+
+.child-touch{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #555;
+    display: block;
+
+}
+.child-untouch{
+    display: none;
+}

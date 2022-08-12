@@ -11,14 +11,15 @@ import { asyncLocalStorage } from '../../utils/util';
 import { PermisoService } from '../../../emp/services/permiso.service';
 import { ConfiguracionGeneral } from '../../entities/configuracion-general';
 import { ConfiguracionGeneralService } from '../../services/configuracion-general.service';
-import { Market } from '@ionic-native/market/ngx';
+// import { Market } from '@ionic-native/market/ngx';
 import { MensajeUsuario } from '../../entities/mensaje-usuario';
 
 @Component({
   selector: 'sm-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  providers: [EmpresaService, PermisoService, Market]
+  // providers: [EmpresaService, PermisoService, Market]
+  providers: [EmpresaService, PermisoService]
 })
 export class LoginComponent implements OnInit {
 
@@ -40,7 +41,7 @@ export class LoginComponent implements OnInit {
   versionDisponible: string;
 
   constructor(
-    public market: Market,
+    // public market: Market,
     public alertController: AlertController,
     private configService: ConfiguracionGeneralService,
     private formBuilder: FormBuilder,
@@ -358,9 +359,9 @@ export class LoginComponent implements OnInit {
   actualizar() {
     let so = localStorage.getItem('plataforma');
     if (so == 'android') {
-      this.market.open('co.sigess.app');
+      // this.market.open('co.sigess.app');
     } else if (so == 'ios') {
-      this.market.open('1562431304');
+      // this.market.open('1562431304');
     } else {
       alert("Plataforma no detectada");
     }

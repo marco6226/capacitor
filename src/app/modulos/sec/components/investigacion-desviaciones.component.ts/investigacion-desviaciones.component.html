@@ -1,0 +1,185 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="anterior()" [disabled]="guardando == true">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Investigación desviaciones</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ng-container *ngIf="loading == true">
+        <ion-spinner class="main-spinner" name="dots" color="primary"></ion-spinner>
+    </ng-container>
+
+    <div *ngIf="guardando == true" style="width: 320px; margin:auto; text-align: center;">
+        <h6>Guardando investigación, por favor espere...</h6>
+        <ion-spinner class="main-spinner" name="dots" color="primary"></ion-spinner>
+    </div>
+
+    <div [style.display]="guardando != true ? 'block':'none'">
+        <ng-container *ngIf="analisisNoEncontrado == false && loading == false">
+            <ion-card>
+                <ion-card-title color="primary">
+                    <h6 style="text-align: center">Desviaciones</h6>
+                </ion-card-title>
+                <ion-card-content>
+                    <div *ngFor="let desv of desviacionesList" class="desv-div">
+                        <p>{{desv.hashId}}</p>
+                        <h2 style="color:#333">{{desv.concepto}}</h2>
+                        <p>Area origen: {{desv.area?.nombre}}</p>
+                        <p>{{desv.aspectoCausante}}</p>
+                    </div>
+                </ion-card-content>
+            </ion-card>
+
+            <ion-segment (ionChange)="segmentChanged($event)" value="investigacion">
+                <ion-segment-button value="investigacion">
+                    <ion-label>Investigación</ion-label>
+                </ion-segment-button>
+                <ion-segment-button value="plan">
+                    <ion-label> Plan de trabajo </ion-label>
+                </ion-segment-button>
+            </ion-segment>
+
+            <sm-formularioTareas (onEvent)="onEvent($event)" [tareasList]="tareasList" [style.display]="segments['plan'] ? 'block':'none'"
+                [readOnly]="consultar"></sm-formularioTareas>
+
+            <ion-slides #slider pager="true" [style.display]="segments['investigacion'] ? 'block':'none'">
+                <ion-slide id="causainmediata">
+                    <ion-card class="inner-card">
+                        <ion-card-title color="primary">
+                            <h6>Causa inmediata</h6>
+                        </ion-card-title>
+                        <ion-card-content>
+                            <sm-tree [nodes]="sistemaCausaInmediata?.causaInmediataList" field="causaInmediataList" label="nombre" [expanded]="true">
+                            </sm-tree>
+                        </ion-card-content>
+                    </ion-card>
+                </ion-slide>
+                <ion-slide id="causaraiz">
+                    <ion-card class="inner-card">
+                        <ion-card-title color="primary">
+                            <h6>Causa raíz</h6>
+                        </ion-card-title>
+                        <ion-card-content>
+                            <sm-tree [nodes]="sistemaCausaRaiz?.causaRaizList" field="causaRaizList" label="nombre" [expanded]="true"> </sm-tree>
+                        </ion-card-content>
+                    </ion-card>
+                </ion-slide>
+                <ion-slide id="causaadmin">
+                    <ion-card class="inner-card">
+                        <ion-card-title color="primary">
+                            <h6>Causa administrativa</h6>
+                        </ion-card-title>
+                        <ion-card-content>
+                            <sm-tree [nodes]="sistemaCausaAdmin?.causaAdminList" field="causaAdminList" label="nombre" [expanded]="true"> </sm-tree>
+                        </ion-card-content>
+                    </ion-card>
+                </ion-slide>
+                <ion-slide id="participantes" *sConfig="'FORM_PART_INVST'">
+                    <ion-card class="inner-card">
+                        <ion-card-title color="primary">
+                            <h6>Participantes</h6>
+                        </ion-card-title>
+                        <ion-card-content>
+                            <ion-button expand="full" (click)="adicionarParticipante()">Adicionar participante</ion-button>
+                            <ion-card *ngFor="let part of participantes; let i = index" class="inner-card">
+                                <ion-button fill="clear" slot="end" (click)="eliminarParticipante(part, i)" color="medium">
+                                    <ion-icon name="close"></ion-icon>
+                                </ion-button>
+                                <ion-card-content>
+                                    <ion-item>
+                                        <ion-label position="stacked">Nombres y apellidos</ion-label>
+                                        <ion-input [(ngModel)]="part.nombresApellidos"></ion-input>
+                                    </ion-item>
+                                    <ion-item>
+                                        <ion-label position="stacked">Cargo</ion-label>
+                                        <ion-input [(ngModel)]="part.cargo"></ion-input>
+                                    </ion-item>
+                                    <ion-item>
+                                        <ion-label position="stacked">Tipo identificación</ion-label>
+                                        <ion-select okText="Aceptar" cancelText="Cancelar" [(ngModel)]="part.tipoIdentificacion">
+                                            <ion-select-option value="Cedula de ciudadanía">Cedula de ciudadanía</ion-select-option>
+                                            <ion-select-option value="Cédula de extranjería">Cédula de extranjería</ion-select-option>
+                                            <ion-select-option value="Tarjeta de identidad">Tarjeta de identidad</ion-select-option>
+                                            <ion-select-option value="Pasaporte">Pasaporte</ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                    <ion-item>
+                                        <ion-label position="stacked">Número identificación</ion-label>
+                                        <ion-input [(ngModel)]="part.numeroIdentificacion"></ion-input>
+                                    </ion-item>
+                                </ion-card-content>
+                            </ion-card>
+                        </ion-card-content>
+                    </ion-card>
+
+                </ion-slide>
+                <ion-slide id="documentos">
+                    <input type="file" #fileChooser (change)="onFileSelect(fileChooser.files)" style="display: none;" />
+                    <ion-card class="inner-card">
+                        <ion-card-title color="primary">
+                            <h6>Documentos</h6>
+                        </ion-card-title>
+                        <ion-card-content>
+                            <ion-card *ngFor="let doc of documentosList; let i = index;">
+                                <ion-card-content>
+                                    <ion-item>
+                                        <ion-icon name="images" *ngIf="doc.ext == 'jpg' || doc.ext == 'jpeg' || doc.ext == 'png'"></ion-icon>
+                                        <ion-icon name="document" *ngIf="doc.ext != 'jpg' && doc.ext != 'jpeg' && doc.ext != 'png'"></ion-icon>
+                                        <ion-button slot="end" fill="clear" (click)="visualizar(doc)">
+                                            <ion-icon name="eye"></ion-icon>
+                                        </ion-button>
+                                        <ion-button slot="end" fill="clear" (click)="removerDoc(doc, i)" color="medium">
+                                            <ion-icon name="close"></ion-icon>
+                                        </ion-button>
+                                    </ion-item>
+                                    <ion-item>
+                                        <ion-label position="stacked">Nombre documento</ion-label>
+                                        <ion-input maxlength="98" [(ngModel)]="doc.alias"></ion-input>
+                                    </ion-item>
+                                    <ion-item>
+                                        <ion-label position="stacked">Descripción</ion-label>
+                                        <ion-textarea maxlength="253" [(ngModel)]="doc.descripcion"></ion-textarea>
+                                    </ion-item>
+                                </ion-card-content>
+                            </ion-card>
+                            <ion-button expand="block" (click)="openFileChooser()">
+                                <ion-icon name="document"></ion-icon>
+                            </ion-button>
+                            <ion-button expand="block" (click)="getPicture()">
+                                <ion-icon name="camera"></ion-icon>
+                            </ion-button>
+                        </ion-card-content>
+                    </ion-card>
+                </ion-slide>
+                <ion-slide id="observaciones">
+                    <ion-card class="inner-card">
+                        <ion-card-title color="primary">
+                            <h6>Comentarios</h6>
+                        </ion-card-title>
+                        <ion-card-content>
+                            <ion-textarea maxlength="510" rows="11" [(ngModel)]="observStr" placeholder="Comentarios y/o recomendaciones de la investigación"></ion-textarea>
+                        </ion-card-content>
+                    </ion-card>
+                </ion-slide>
+            </ion-slides>
+        </ng-container>
+
+        <div style="height: 150px;"></div>
+
+    </div>
+    <ng-container *ngIf="analisisNoEncontrado == true && loading == false">
+        No fue posible cargar el detalle de la investigación
+    </ng-container>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!guardando && !loading && !consultar">
+        <ion-fab-button [disabled]="isTareaList" (click)="guardarInvestigacion()">
+            <ion-icon name="save"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+    
+</ion-content>

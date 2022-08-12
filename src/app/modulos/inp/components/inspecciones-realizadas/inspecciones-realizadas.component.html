@@ -1,0 +1,114 @@
+<div *ngIf="loading == true">
+    <ion-spinner class="main-spinner" name="dots" color="primary"></ion-spinner>
+</div>
+<div *ngIf="inspCargadas == false">
+    <p style="color: #888; padding: 25px">
+        No fue posible cargar las inspecciones realizadas.
+        <a *ngIf="inspCargadas == false" (click)="this.cargarRealizadas()">Reintentar</a>
+    </p>
+</div>
+
+<ion-item style="width: 100%;">
+    <ion-card style="width: 100%;">
+
+        <ion-card-content *ngIf="filtroToogle" style="width: 100%;">
+
+            <ion-item>
+                <ion-icon slot="start" name="calendar"></ion-icon>
+                <ion-label position="floating">Desde</ion-label>     
+                <ion-datetime   
+                    cancelText="Cancelar"
+                    doneText="Ok"         
+                    displayFormat="DD/MM/YYYY"
+                    picker-format="DD, MMMM, YYYY"         
+                    monthNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+                    [(ngModel)]="fechaDesde"
+                    (ionChange)="changeFilter()"
+                    ></ion-datetime> 
+            </ion-item>
+
+            <ion-item>
+                <ion-icon slot="start" name="calendar"></ion-icon>
+                <ion-label position="floating">Hasta</ion-label>     
+                <ion-datetime   
+                    cancelText="Cancelar"
+                    doneText="Ok"         
+                    displayFormat="DD/MM/YYYY"
+                    picker-format="DD, MMMM, YYYY"         
+                    monthNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+                    [(ngModel)]="fechaHasta"
+                    (ionChange)="changeFilter()"
+                    ></ion-datetime> 
+            </ion-item>
+
+            <ion-item>
+                <ion-icon slot="start" name="git-commit"></ion-icon>
+                <ion-label position="floating">Código</ion-label>
+                <ion-input type="number" [(ngModel)]="textoFilt" (ionChange)="changeFilter()"></ion-input>
+            </ion-item>
+
+            <ion-item>
+                <ion-icon slot="start" name="mail"></ion-icon>
+                <ion-label position="floating">Usuario Elabora</ion-label>          
+                <ion-input type="text" [(ngModel)]="campoFilt" (ionChange)="changeFilter()"></ion-input>
+            </ion-item>
+
+            <ion-item>
+                <ion-icon slot="start" name="pin"></ion-icon>
+                <ion-label position="floating">Ubicación</ion-label>
+                <ion-select [(ngModel)]="ubicaionFilt" (ionChange)="changeFilter()">
+                    <ion-select-option *ngFor="let cli of ListaUbicacion" [value]="cli.area.nombre">{{cli.area.nombre}}</ion-select-option>
+                </ion-select>
+            </ion-item>
+
+        </ion-card-content>
+        <ion-item>
+            <ion-label *ngIf="!filtroToogle">Filtros</ion-label>
+
+            <ion-button *ngIf="filtroToogle" slot="start" shape="round" (click)="borrarFiltros()" style="font-size: 10px; height: 24px; width: 113px;">
+                Borrar
+                <ion-icon slot="start" name="close-circle" color="light" [ngStyle]="{'transform': rotarIcon}"></ion-icon>
+            </ion-button>
+
+            <ion-button slot="end" shape="round" (click)="filtrarInspecciones()" >
+                <ion-icon name="funnel" color="light" [ngStyle]="{'transform': rotarIcon}"></ion-icon>
+            </ion-button>
+        </ion-item>        
+
+    </ion-card>    
+</ion-item>
+
+<!-- <ion-button (click)="filtroInterno()">
+  Ok
+</ion-button> -->
+
+<!-- <ion-card *ngFor="let inspeccion of inspList | filtroProg: textoFilt: campoFilt: fechaDesde: fechaHasta: ubicaionFilt"> -->
+<ion-card *ngFor="let inspeccion of inspList | filtroProg: textoFilt: campoFilt: fechaDesde: fechaHasta: ubicaionFilt">
+
+    <ion-item>
+        <ion-label>{{inspeccion?.area.nombre}} </ion-label>
+        <ion-button shape="round" size="small" color="tertiary" slot="end" (click)="abrirInspeccion(inspeccion)">Consultar <ion-icon slot="icon-only" name="search" ></ion-icon></ion-button>
+    </ion-item>
+    <ion-card-header>
+        <ion-card-title>INP-{{ inspeccion.id }}</ion-card-title>
+        <ion-card-subtitle>
+            {{ inspeccion.listaInspeccion.nombre }} <br />
+            Usuario Realiza: {{ inspeccion.usuarioRegistra.email }} <br />
+            Realizada: {{ inspeccion?.fechaRealizada | date: 'dd/MM/yyyy HH:mm' }}
+            {{inspeccion?.programacion_area_nombre}} 
+        </ion-card-subtitle>
+    </ion-card-header>
+</ion-card>
+<!-- <ion-button color="light" (click)="loadMore()" *ngIf="!this.disabled" expand="full" color="primary">Ver mas registros</ion-button> -->
+<ion-card *ngIf="inspList?.length == 0" class="NoFound">
+    <ion-icon name="search" slot="start"></ion-icon>
+    <ion-label> No se encontraron registros </ion-label>
+    <ion-icon name="alert"></ion-icon>
+</ion-card>
+
+<ion-infinite-scroll threshold="10px" position="bottom" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Cargando mas datos...">
+    </ion-infinite-scroll-content>
+</ion-infinite-scroll>

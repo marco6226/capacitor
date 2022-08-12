@@ -1,0 +1,19 @@
+<ion-item>
+    <ion-icon [name]="inspeccionesList.length > 0 ? 'alert' : 'checkmark-circle'" [color]="inspeccionesList.length > 0 ? 'warning' : 'success'"></ion-icon>
+    <ion-label>
+        <h4 *ngIf="inspeccionesList.length > 0">Inspecciones iniciadas</h4>
+        <h4 *ngIf="inspeccionesList.length == 0">Sin pendientes</h4>
+    </ion-label>
+</ion-item>
+
+<ion-list>
+    <ion-item *ngFor="let item of inspeccionesList; let idx = index;" button>
+        <ion-label (click)="seleccionar(item)">
+            <h4>{{item.fechaRealizada | date:'yyyy-MM-dd HH:mm'}}</h4>
+            <p>{{item.listaInspeccion.codigo}} - {{item.listaInspeccion.nombre}}</p>
+        </ion-label>
+        <ion-button (click)="elimianrInsp(item, idx)" slot="end" fill="clear">
+            <ion-icon name="close"></ion-icon>
+        </ion-button>
+    </ion-item>
+</ion-list>

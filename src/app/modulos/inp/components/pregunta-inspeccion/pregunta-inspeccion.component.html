@@ -1,0 +1,99 @@
+<ion-card *ngIf="elementoActual">
+  <ion-item *ngFor="let elem of elementoParents">
+    <p>{{elem}}</p>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Calificación</ion-label>
+    <ion-select okText="Aceptar" cancelText="Cancelar" compareWith="id" [(ngModel)]="elementoActual.calificacion.opcionCalificacion"
+      (ionChange)="emitirCambioCalificacion($event)">
+      <ion-select-option *ngFor="let opc of opcionCalificacionList" [value]="opc">
+        {{opc.nombre}} - {{opc.descripcion}}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Descripción del hallazgo</ion-label>
+    <ion-textarea [(ngModel)]="elementoActual.calificacion.recomendacion" maxlength="510"></ion-textarea>
+  </ion-item>
+  <ion-button color="primary" fill="outline" expand="block" (click)="getPicture()">
+    <ion-icon slot="icon-only" name="camera"></ion-icon>
+  </ion-button>
+  <ion-item>
+    <!-- <img [src]="image" *ngIf="image" /> -->
+    <ion-slides pager="true" #ionSlides>
+      <ion-slide *ngFor="let img of imagenes;let i = index">
+        <div>
+          <div class="img-toolbar">
+            <ion-button slot="end" fill="clear" color="medium" (click)="presentRemoveImg(i)">
+              <ion-icon name="close"></ion-icon>
+            </ion-button>
+          </div>
+          <img [src]="img | safeBypass:'resourceUrl'" />
+        </div>
+      </ion-slide>
+    </ion-slides>
+  </ion-item>
+  <ion-item *ngIf="usarTipoHallazgo">
+    <ion-label position="stacked">Tipo hallazgo</ion-label>
+    <ion-select okText="Aceptar" cancelText="Cancelar" [(ngModel)]="elementoActual.calificacion.tipoHallazgo">
+      <ion-select-option *ngFor="let th of elementoActual?.tipoHallazgoList" [value]="th">{{th.nombre}}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf="usarNivelRiesgo">
+    <ion-label position="stacked">Nivel de riesgo</ion-label>
+    <ion-select okText="Aceptar" cancelText="Cancelar" [(ngModel)]="elementoActual.calificacion.nivelRiesgo">
+      <ion-select-option *ngFor="let nr of sistNivelRiesgo?.nivelRiesgoList" [value]="nr">{{nr.nombre}} - {{nr.descripcion}}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+</ion-card>
+
+
+<!-- <ion-grid *ngIf="elementoActual">
+  <ion-row>
+    <ion-col size-xs="12" size-sm="12" size-md="12" size-lg="12" size-xl="12">
+      <p *ngFor="let elem of elementoParents">{{elem}}</p>
+    </ion-col>
+    <ion-col size-xs="12" size-sm="12" size-md="12" size-lg="12" size-xl="12">
+      <ion-button color="primary" fill="outline" expand="block" (click)="getPicture()">
+        <ion-icon slot="icon-only" name="camera"></ion-icon>
+      </ion-button>
+      <img [src]="image" *ngIf="image" />
+    </ion-col>
+    <ion-col size-xs="12" size-sm="12" size-md="12" size-lg="12" size-xl="12">
+      <ion-item>
+        <ion-label position="stacked">Calificación</ion-label>
+        <ion-select okText="Aceptar" cancelText="Cancelar" [(ngModel)]="elementoActual.calificacion.opcionCalificacion">
+          <ion-select-option *ngFor="let opc of opcionCalificacionList" [value]="opc">{{opc.nombre}} -
+            {{opc.descripcion}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <ion-col size-xs="12" size-sm="12" size-md="12" size-lg="12" size-xl="12" *ngIf="usarTipoHallazgo">
+      <ion-item>
+        <ion-label position="stacked">Tipo hallazgo</ion-label>
+        <ion-select okText="Aceptar" cancelText="Cancelar" [(ngModel)]="elementoActual.calificacion.tipoHallazgo">
+          <ion-select-option *ngFor="let th of elementoActual?.tipoHallazgoList" [value]="th">{{th.nombre}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <ion-col size-xs="12" size-sm="12" size-md="12" size-lg="12" size-xl="12" *ngIf="usarNivelRiesgo">
+      <ion-item>
+        <ion-label position="stacked">Nivel de riesgo</ion-label>
+        <ion-select okText="Aceptar" cancelText="Cancelar" [(ngModel)]="elementoActual.calificacion.nivelRiesgo">
+          <ion-select-option *ngFor="let nr of sistNivelRiesgo?.nivelRiesgoList" [value]="nr">{{nr.nombre}} -
+            {{nr.descripcion}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <ion-col size-xs="12" size-sm="12" size-md="12" size-lg="12" size-xl="12">
+      <ion-item>
+        <ion-label position="stacked">Recomendación</ion-label>
+        <ion-textarea [(ngModel)]="elementoActual.calificacion.recomendacion"></ion-textarea>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+</ion-grid> -->

@@ -1,0 +1,26 @@
+<ion-card *ngFor="let inp of inspList; let i = index">
+  <ion-item>
+
+    <ion-button *ngIf="inp['sync'] == null || inp['sync'] == false" fill="outline" (click)="sincronizar(inp, i)">
+      {{inp.fechaRealizada | date:'dd/MM/yyyy HH:mm'}}
+    </ion-button>
+
+    <ion-spinner *ngIf="inp['sync'] == true" class="main-spinner" name="dots" color="primary"></ion-spinner>
+
+    <ion-button *ngIf="inp['sync'] == null || inp['sync'] == false" fill="clear" slot="end" (click)="presentAlertConfirm(inp, i)"
+      color="medium">
+      <ion-icon name="close"></ion-icon>
+    </ion-button>
+
+  </ion-item>
+  <ion-card-header>
+    <ion-label *ngIf="inp.programacion">{{inp.programacion.listaInspeccion.nombre}}</ion-label>
+    <ion-label *ngIf="inp.listaInspeccion">{{inp.listaInspeccion.nombre}}</ion-label>
+    <ion-card-subtitle>
+      <ion-label *ngIf="inp.programacion">{{inp.programacion.area.nombre}}</ion-label>
+      <ion-label *ngIf="inp.area">{{inp.area.nombre}}</ion-label>
+    </ion-card-subtitle>
+    <ion-card-subtitle *ngIf="inp.programacion"> {{inp.programacion.fecha | date:'dd/MM/yyyy'}} </ion-card-subtitle>
+    <ion-card-subtitle *ngIf="!inp.programacion"> No programada </ion-card-subtitle>
+  </ion-card-header>
+</ion-card>

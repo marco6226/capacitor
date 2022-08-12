@@ -1,0 +1,89 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="anterior()" [disabled]="guardando == true">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title (click)="abrirMenu()">
+      Elementos {{numeroRespondidas}}/{{indicePreguntas.length}}
+      <!-- 
+      <div *ngIf="loadingArea == true">
+        <ion-spinner name="dots" color="light"></ion-spinner>
+      </div>
+      <div *ngIf="areasCargadas == false">
+        <a style="color:white" (click)="cargarAreas()">--Reintentar cargar areas--</a>
+      </div>
+
+      <ion-select *ngIf="!esProgramada && areasCargadas == true" placeholder="Seleccione área" [(ngModel)]="area" [disabled]="guardando == true">
+        <ion-select-option *ngFor="let area of areasList" [value]="area">{{area.nombre}}</ion-select-option>
+      </ion-select> -->
+
+
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="siguiente()" *ngIf="!visibleGuardar && listaCargada == true" [disabled]="guardando == true">
+        <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div *ngIf="loadingLI == true">
+    <ion-spinner class="main-spinner" name="dots" color="primary"></ion-spinner>
+  </div>
+  <div *ngIf="listaCargada == false">
+    <p style="color:#888;padding:25px">
+      No fue posible cargar la lista de inspección
+      <a *ngIf="listaCargada == false" (click)="cargarListaInsp()">Reintentar</a>
+    </p>
+  </div>
+
+  <div *ngIf="guardando == true" style="width: 320px; margin:auto; text-align: center;">
+    <h6>Guardando inspección, por favor espere...</h6>
+    <ion-spinner class="main-spinner" name="dots" color="primary"></ion-spinner>
+  </div>
+
+  <div [style.display]="guardando != true ? 'block':'none'">
+    <ion-item *ngIf="listaCargada == true">
+      <ion-label>{{listaInspeccion?.nombre}}</ion-label>
+    </ion-item>
+    <ion-item *ngIf="listaInspeccion?.descripcion && listaCargada == true">
+      <ion-note style="padding:10px;">{{listaInspeccion?.descripcion}}</ion-note>
+    </ion-item>
+    <ion-label style="margin-left:15px;" *ngIf="esProgramada">{{area?.nombre}}</ion-label>
+    <sm-areaSelector *ngIf="!esProgramada" [(ngModel)]="area" [disabled]="guardando == true" appendTo="ion-modal"></sm-areaSelector>
+    <ion-card *ngIf="listaCargada == true" [ngClass]=" (numeroPreguntaActual == -1) ? 'mostrar':'ocultar'">
+      <ion-item>
+        <sm-formulario *ngIf="listaInspeccion?.formulario" [ngClass]=" (numeroPreguntaActual == -1) ? 'mostrar':'ocultar'" #formulario
+          [formularioModel]="listaInspeccion?.formulario" [respuestasList]="inspPend?.respuestasCampoList"></sm-formulario>
+      </ion-item>
+    </ion-card>
+
+    <sm-preguntaInspeccion *ngIf="elementoSelect" [ngClass]="(numeroPreguntaActual >= 0) ? 'mostrar':'ocultar'" [elementoInspeccion]="elementoSelect"
+      [opcionCalificacionList]="listaInspeccion.opcionCalificacionList" [usarNivelRiesgo]="listaInspeccion.usarNivelRiesgo"
+      [usarTipoHallazgo]="listaInspeccion.usarTipoHallazgo" (onCalificacionChange)="registrarCambioCalif($event)">
+    </sm-preguntaInspeccion>
+
+  </div>
+
+  <div style="height: 150px;"></div>
+  <ion-fab *ngIf="!guardando && listaCargada == true" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="guardarInspeccion()">
+      <ion-icon name="save"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-fab *ngIf="!guardando && listaCargada == true" vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button (click)="presentAlertaSalir()" color="light">
+      <ion-icon name="undo"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+
+<!-- <ion-fab class="iconSup" vertical="bottom" horizontal="start" slot="fixed">
+  <ion-fab-button (click)="datosEmail()">
+    <ion-icon name="create"></ion-icon>
+  </ion-fab-button>
+</ion-fab> -->

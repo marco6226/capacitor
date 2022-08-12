@@ -1,0 +1,48 @@
+<ion-card>
+
+    <ion-card-content>
+        <ion-item>
+            <ion-spinner *ngIf="loading == true" class="main-spinner" name="dots" color="primary"></ion-spinner>
+
+            <ng-container *sTienePermiso="['IND_PUT_KPI']">
+                <ion-button *ngIf="loading != true" fill="clear" (click)="onSaveClick()">
+                    <ion-icon name="save" slot="icon-only"></ion-icon>
+                </ion-button>
+            </ng-container>
+
+            <ion-button *ngIf="loading != true" fill="clear" slot="end" (click)="refresh()">
+                <ion-icon name="refresh" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button *ngIf="loading != true" fill="clear" slot="end" (click)="abrirDlg()">
+                <ion-icon name="options" slot="icon-only"></ion-icon>
+            </ion-button>
+        </ion-item>
+        <h6 class="title-h6">{{titulo}}</h6>
+        <div *ngIf="parametros.param?.rangoUnico" style="text-align: center;">{{parametros.param?.rangos[0].nombre}}</div>
+        <div style="height: 320px" *ngIf="hideChart == false">
+            <canvas #canvas></canvas>
+        </div>
+        <div *ngIf="resumen" class="table-container" [style.margin-top]="hideChart == false ? '15px':'0px'">
+            <div class="column-frozen">
+                <div class="cell"></div>
+                <div *ngFor="let lbl of _data?.labels; let i = index;" class="cell border-cell">
+                    <span class="texto">{{lbl}}</span>
+                </div>
+            </div>
+            <div class="columns">
+                <div *ngFor="let ds of _data?.datasets">
+                    <div class="cell column-title" [style.border-bottom-color]="ds.backgroundColor"><span class="texto">{{ds.label}}</span></div>
+                    <div *ngFor="let lbl of _data?.labels; let idx = index;" class="cell border-cell" [style.backgroundColor]="ds.dataStyle != null && ds.dataStyle[idx] != null ? ds.dataStyle[idx].backgroundColor : ''"
+                        [style.color]="ds.dataStyle != null && ds.dataStyle[idx] != null ? ds.dataStyle[idx].color : ''">
+                        <div *ngIf="ds.data[idx] == null" class="na-class">N/A</div>
+                        <div *ngIf="ds.data[idx] != null">
+                            <span *ngIf="ds.posicionUnidad == 'inicio'">{{ds.unidad}}</span>
+                            <span>{{ds.data[idx] | number:'1.0-2'}}</span>
+                            <span *ngIf="ds.posicionUnidad == 'fin'">{{ds.unidad}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ion-card-content>
+</ion-card>

@@ -1,0 +1,145 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-buttons slot="start">
+          <ion-button (click)="anterior()">
+              <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+          </ion-button>
+      </ion-buttons>
+      <ion-title>Gestión Observaciones</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngFor="let observacion of observacionLista" >
+  <ion-slides #slider pager="true">
+
+    <ion-slide>
+      <ion-card class="tarjeta">
+        <ion-item>
+          <ion-label class="tarjetaTitulo" color="primary">Registro gráfico</ion-label>
+        </ion-item>
+        <ion-card-content>
+          <div>
+            <ion-list *ngIf="imagenesList?.length == 0" style="text-align: center;">
+              <div>
+                <ion-icon class="evidencia" name="eye-off"></ion-icon>            
+              </div>
+            </ion-list>
+            
+            <ion-list *ngIf="imagenesList?.length > 0">
+              <ion-img [src]="imagenesList[0].source[0]"></ion-img>
+            </ion-list>
+          </div>      
+        </ion-card-content>   
+      </ion-card>
+    </ion-slide>
+
+    <ion-slide>
+      <ion-card class="tarjeta">
+        <ion-card-title>
+          <ion-item>
+            <ion-label class="tarjetaTitulo" color="primary">Datos de observación</ion-label>
+          </ion-item>
+        </ion-card-title>
+        <ion-card-content class="tarjetaContenido">
+          <h2 class="subtitulos">Fecha reportada:</h2>
+          <ion-label>{{convertirAFecha(observacion.fechaObservacion)}}</ion-label>
+          <h2 class="subtitulos">Código:</h2>
+          <ion-label>OBS-{{observacion.id}}</ion-label> 
+          <h2 class="subtitulos">Tipo de observación:</h2>
+          <ion-label>{{observacion.tipoObservacion}}</ion-label>
+          <h2 class="subtitulos">Descripción:</h2>
+          <ion-label>{{observacion.descripcion}}</ion-label>
+          <h2 *ngIf="idEmpresa !='16' " class="subtitulos">Afecta</h2>
+          <ion-label>{{observacion.afecta}}</ion-label>
+          <h2 class="subtitulos">Categoría:</h2>
+          <ion-label *ngFor="let causaRaiz of observacion.implicacionList">  -{{causaRaiz.nombre}}</ion-label>
+          <br>
+          <h2 class="subtitulos">Area:</h2>
+          <ion-label>{{observacion.area.nombre}}</ion-label>
+        </ion-card-content>   
+      </ion-card>
+    </ion-slide>
+
+    <ion-slide>
+      <ion-card class="tarjeta">
+        <ion-card-title>
+          <ion-item>
+            <ion-label class="tarjetaTitulo" color="primary">Detalle</ion-label>
+          </ion-item>
+        </ion-card-title>
+        <ion-card-content class="tarjetaContenido">
+          <div *ngIf="idEmpresa == '16'">
+            <h2  class="subtitulos">Personas observadas:</h2>
+            <ion-label>{{observacion.personasobservadas}}</ion-label>
+          </div>
+          <div *ngIf="idEmpresa == '16'">
+            <h2 class="subtitulos">Personas abordadas:</h2>
+            <ion-label>{{observacion.personasabordadas}}</ion-label>
+          </div>
+          <div>
+            <h2 class="subtitulos">Recomendación:</h2>
+            <ion-label>{{observacion.recomendacion}}</ion-label>
+          </div>
+          <h2 class="subtitulos">Usuario que reporta:</h2>
+          <p>{{observacion.usuarioReporta.email}}</p>
+        </ion-card-content>   
+      </ion-card>
+    </ion-slide>      
+
+    <ion-slide >
+      <ion-card class="tarjeta">
+        <ion-card-title>
+          <ion-item>
+            <ion-label class="tarjetaTitulo" color="primary">Observaciones</ion-label>
+          </ion-item>
+        </ion-card-title>
+        <ion-card-content class="tarjetaContenido">        
+          <ion-input [(ngModel)]="motivo"></ion-input>  
+
+          <div *ngIf="observacion.aceptada==true">
+            <ion-fab  class="validado">
+              <ion-fab-button color="success" >
+                <ion-icon name="checkmark"></ion-icon>
+              </ion-fab-button>                      
+            </ion-fab>
+          </div>
+          
+          <div *ngIf="observacion.aceptada==false">
+            <ion-fab class="validado">
+              <ion-fab-button color="danger" >
+                <ion-icon name="close"></ion-icon>
+              </ion-fab-button> 
+            </ion-fab>
+          </div>
+
+
+        </ion-card-content>   
+      </ion-card>
+    </ion-slide>
+
+  </ion-slides>
+</ion-content>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" >
+  <ion-fab-button (click)="onTarjetaEdit()">
+    <ion-icon name="create"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+
+<ion-fab horizontal="end" vertical="bottom" slot="fixed" class="iconSup">
+  <ion-fab-button>
+    <ion-icon name="checkmark-circle-outline"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-list side="top">
+    <ion-fab-button color="danger" class="ionfabDen">
+      <ion-icon name="close" (click)="guardarGestionObervacion('denegar')" color="light"></ion-icon>
+    </ion-fab-button>
+    <ion-label class="labelFloat">Denegar</ion-label>
+    <ion-fab-button color="success" class="ionfabAce">
+      <ion-icon name="checkmark" (click)="guardarGestionObervacion('aceptar')" color="light"></ion-icon>
+    </ion-fab-button>
+    <ion-label class="labelFloat">Aceptar</ion-label>    
+  </ion-fab-list>
+</ion-fab>
+

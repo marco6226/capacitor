@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-buttons slot="start">
+          <ion-button (click)="anterior()">
+              <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+          </ion-button>
+      </ion-buttons>
+      <ion-title>Evidencias de inspección</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngIf="listaImagenes.length == 0" style="text-align: center;">
+    <div>
+      <ion-label>No se han encontrado registros.</ion-label>
+      <ion-icon class="evidencia" name="eye-off"></ion-icon>          
+    </div>
+  </ion-list>
+  <ion-slides *ngIf="listaImagenes.length > 0" pager="true">
+    <!-- <ion-label style="white-space: pre-wrap !important;" class="subtitulos" color="primary"></ion-label> -->
+    <ion-slide *ngFor="let imagen of listaImagenes">
+      <ion-img [src]="imagen.source"></ion-img>   
+    </ion-slide>
+  </ion-slides>
+
+</ion-content>

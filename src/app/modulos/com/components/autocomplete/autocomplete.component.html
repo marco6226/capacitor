@@ -1,0 +1,10 @@
+<div style="border-bottom: solid thin #ccc;">
+  <input type="text" [ngModel]="inputValue" (input)="onSearchChange($event)"/>
+  <div class="options-div">
+    <div>
+      <ng-template ngFor let-opc [ngForOf]="options" let-i="index">
+        <button type="button" (click)="onSelect(opc)">{{opc[fieldLabel]}}</button>
+      </ng-template>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,97 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="anterior()" [disabled]="guardando == true">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>{{ tarjeta?.nombre }}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div *ngIf="guardando == true" style="width: 320px; margin: auto; text-align: center">
+        <h6>Guardando observación, por favor espere...</h6>
+        <ion-spinner class="main-spinner" name="dots" color="primary"></ion-spinner>
+    </div>
+
+    <div [style.display]="guardando != true ? 'block' : 'none'">
+        <form [formGroup]="formGet">
+            <ion-card>
+
+                <ion-button color="primary" fill="outline" expand="block" (click)="getPicture()" *sTienePermiso="['ADO_POST_DOCSUP']">
+                    <ion-icon slot="icon-only" name="camera"></ion-icon>
+                </ion-button>
+
+                <ion-slides pager="true">
+                    <ion-slide *ngFor="let img of imagenes; let i = index">
+                        <div>
+                            <div class="img-toolbar">
+                                <ion-button slot="end" fill="clear" color="medium" (click)="presentRemoveImg(i)">
+                                    <ion-icon name="close"></ion-icon>
+                                </ion-button>
+                            </div>
+                            <img [src]="img | safeBypass: 'resourceUrl'" />
+                        </div>
+                    </ion-slide>
+                </ion-slides>
+
+                <ion-item>
+                    <ion-label position="stacked">Tipo de observacion*</ion-label>
+                    <ion-select okText="Aceptar" cancelText="Cancelar" formControlName="tipoObservacion" [(ngModel)]="observacion.tipoObservacion">
+                        <ion-select-option *ngFor="let to of tarjeta?.campos.tipo_observacion" [value]="to.label">
+                            <p>{{ to.label }}</p>
+                        </ion-select-option>
+                    </ion-select>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label *ngIf="formGet.value.tipoObservacion != 'Acciones a mejorar' && formGet.value.tipoObservacion != 'Positivas'" position="stacked">Descripción:</ion-label>
+                    <ion-label *ngIf="formGet.value.tipoObservacion == 'Positivas'" position="stacked">Observaciones positivas:</ion-label>
+                    <ion-label *ngIf="formGet.value.tipoObservacion == 'Acciones a mejorar'" position="stacked">Acciones a mejorar resaltantes:</ion-label>
+                    <ion-textarea formControlName="descripcion" maxlength="510"[(ngModel)]="observacion.descripcion" [value]="observacion.descripcion"></ion-textarea>
+                </ion-item>            
+
+                <ion-item *ngIf="idEmpresa != '16'">
+                    <ion-label position="stacked">Afecta:</ion-label>
+                    <ion-select okText="Aceptar" cancelText="Cancelar" formControlName="afecta" multiple="true" [(ngModel)]="observacion.afecta">
+                        <ion-select-option *ngFor="let a of tarjeta.campos.afecta" [value]="a.label">{{ a.label }}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+
+                <ion-item *ngIf="idEmpresa == '16'">
+                    <ion-label position="stacked">Personas observadas:</ion-label>
+                    <ion-input type="number" formControlName="personasobservadas" [(ngModel)]="observacion.personasobservadas" [value]="observacion.personasobservadas"></ion-input>
+                </ion-item>
+
+                <ion-item *ngIf="idEmpresa == '16'">
+                    <ion-label position="stacked">Personas abordadas:</ion-label>
+                    <ion-input type="number" formControlName="personasabordadas" [(ngModel)]="observacion.personasabordadas" [value]="observacion.personasabordadas"></ion-input>
+                </ion-item>
+
+                <ion-item *ngIf="idEmpresa != '16'">
+                    <ion-label position="stacked">Recomendación:</ion-label>
+                    <ion-textarea formControlName="recomendacion" maxlength="510" [(ngModel)]="observacion.recomendacion" [value]="observacion.recomendacion"></ion-textarea>
+                </ion-item>   
+
+                <sm-areaSelector *ngIf="isVisible" formControlName="area" [disabled]="guardando == true" appendTo="ion-modal"></sm-areaSelector>
+                <sm-areaSelector formControlName="area" [(ngModel)]="areaResp" [disabled]="guardando == true" appendTo="ion-modal"></sm-areaSelector>
+
+                
+                    <ion-label  style="margin-left: 16px;color: black;font-size: 13px;" position="stacked" >Categorías:</ion-label>
+                    <sm-tree [nodes]="tarjeta.implicacionList" field="implicacionList" label="nombre" [expanded]="true">                        
+                    </sm-tree>
+                    
+                
+
+            </ion-card>
+        </form>
+    </div>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button (click)="guardarObservacion()">
+            <ion-icon name="save"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+
+</ion-content>

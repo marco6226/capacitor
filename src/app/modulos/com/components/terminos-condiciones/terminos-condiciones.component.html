@@ -1,0 +1,43 @@
+<div *ngIf="visible" class="main">
+  <p style="text-align: justify;font-weight: bold;">
+    A continuación encontrará nuestra política de tratamiento de datos. Por favor leala cuidadosamente y después especifique
+    si acepta los términos
+  </p>
+  <ion-spinner *ngIf="loading == true" class="main-spinner" name="dots" color="primary"></ion-spinner>
+  <div class="politica" *ngIf="loading == false" [innerHTML]="safeHtml" ></div>
+  <div style="margin-top:10px;">
+    ¿Acepta los términos?
+    <ion-button color="primary" (click)="abrirConfirmacion(true)">SI</ion-button>
+    <ion-button color="light" (click)="abrirConfirmacion(false)">NO</ion-button>
+  </div>
+</div>
+
+<div class="dialog" *ngIf="visibleConfDlg">
+  <div class="dlg-content">
+    <div *ngIf="acepta">
+      <p>
+        Al marcar SI se entenderá que acepta la política de tratamiento de datos y podrá continuar con el uso del sistema.
+        ¿Confirma la aceptación de la política?
+      </p>
+      <ion-button color="primary" (click)="marcarAceptacion(true)" size="small">
+        <ion-icon slot="start" name="checkmark"></ion-icon>
+        Aceptar
+      </ion-button>
+      <ion-button color="light" (click)="visibleConfDlg=false" size="small">
+        Cancelar
+      </ion-button>
+    </div>
+    <div *ngIf="!acepta">
+      <p>Al marcar NO se entenderá que no está de acuerdo con la política de tratamiento de datos, en cuyo caso
+        la sesión será finalizada. ¿Esta seguro de NO aceptar?
+      </p>
+      <ion-button color="warning" (click)="marcarAceptacion(false)" size="small">
+        <ion-icon slot="start" name="warning"></ion-icon>
+        No aceptar
+      </ion-button>
+      <ion-button color="light" (click)="visibleConfDlg=false" size="small">
+        Cancelar
+      </ion-button>
+    </div>
+  </div>
+</div>

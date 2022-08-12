@@ -1,0 +1,41 @@
+
+<div *ngIf="loading == true">
+  <ion-spinner class="main-spinner" name="dots" color="primary"></ion-spinner>
+</div>
+<ion-card *ngFor="let observacion of observacionLista">
+  <ion-item>
+    <ion-label>{{observacion.tipoObservacion}}</ion-label>    
+    <ion-button shape="round" size="small" color="tertiary" slot="end" (click)="onConsultaSelect(observacion)">Consultar<ion-icon slot="icon-only" name="search" ></ion-icon></ion-button>
+  </ion-item>
+  <ion-card-content>
+    <!-- <ion-item>  --> 
+    <p>OBS-{{observacion.id}} </p>
+    <p>{{observacion.descripcion}}</p>
+    <p>{{convertirAFecha(observacion.fechaObservacion)}}</p>   
+    <ion-label style="color : black ; font-size : 16px">{{observacion.area.nombre}}</ion-label>
+    <ion-item>
+      <ion-chip class="chip" slot="end" *ngIf="observacion.aceptada == null && observacion.tipoObservacion != 'Positivas'"  fill="solid" color="medium">
+        <ion-label class="chip" color="medium">
+          Sin asignar
+        </ion-label>      
+      </ion-chip>
+      <ion-chip class="chip" slot="end" *ngIf="observacion.aceptada && observacion.aceptada != null" fill="solid" color="success">
+        <ion-label class="chip" color="success">
+          Aceptada
+        </ion-label>      
+      </ion-chip>
+      <ion-chip class="chip" slot="end" *ngIf="!observacion.aceptada && observacion.aceptada != null" fill="solid" color="danger">
+        <ion-label class="chip" color="danger">
+          Denegada
+        </ion-label>      
+      </ion-chip>
+      <ion-chip class="chip" slot="end" *ngIf="!observacion.aceptada && observacion.tipoObservacion == 'Positivas'" fill="solid" color="warning">
+        <ion-label class="chip" color="warning">
+          Segura
+        </ion-label>      
+      </ion-chip>
+    </ion-item>
+  </ion-card-content>
+  
+</ion-card>
+

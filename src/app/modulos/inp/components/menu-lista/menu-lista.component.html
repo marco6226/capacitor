@@ -1,0 +1,6 @@
+<ion-list>
+    <ion-item  *ngFor="let item of items" button (click)="seleccionar(item.indice)">
+        <ion-icon slot="start" *ngIf="item.calificable" name="checkmark-circle" [color]="item.checked ? 'primary':'light'"></ion-icon>
+        <ion-label style="white-space: pre-wrap !important;">{{item.label}}</ion-label>
+    </ion-item>
+</ion-list>

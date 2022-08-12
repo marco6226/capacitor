@@ -1,0 +1,162 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="navegar('/app/sec/secInicio')">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Consulta desviaciones</ion-title>
+        <ion-buttons slot="end">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-segment (ionChange)="segmentChanged($event)" value="desviaciones">
+        <ion-segment-button value="desviaciones">
+            <ion-label>Desviaciones</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="analisis">
+            <ion-label>
+                Sincronizar
+                <ion-badge *ngIf="analisisCount > 0" color="warning">{{analisisCount}}</ion-badge>
+            </ion-label>
+        </ion-segment-button>
+    </ion-segment>
+
+    <sm-analisisDesviacionesSync [style.display]="segments['analisis'] ? 'block':'none'" #analisisDesvSyncComp (onEvent)="onEvent($event)"></sm-analisisDesviacionesSync>
+
+    <ion-slides #slider [style.display]="segments['desviaciones'] ? 'block':'none'">
+        <ion-slide>
+            <div style="width: 100%">
+                <ion-item *ngIf="filtDisp == false">
+                    <ion-label color="medium"> Filtros no disponibles en modo offline </ion-label>
+                </ion-item>
+                <ion-item *ngIf="filtDisp == true">
+                    <ion-icon name="search" slot="start"></ion-icon>
+                    <ion-label position="stacked"> Modulo </ion-label>
+                    <ion-select (ionChange)="filtrarModulo($event)">
+                        <ion-select-option [value]="null">Todos</ion-select-option>
+                        <ion-select-option value="Reporte A/I">Reporte A/I</ion-select-option>
+                        <ion-select-option value="Inspecciones">Inspecciones</ion-select-option>
+                        <ion-select-option value="Observaciones">Observaciones</ion-select-option>
+                    </ion-select>
+                </ion-item>
+
+                <ion-item *ngIf="filtDisp == true">
+                    <ion-icon name="search" slot="start"></ion-icon>
+                    <ion-label position="stacked"> Investigado </ion-label>
+                    <ion-select (ionChange)="filtrarInvestigado($event)">
+                        <ion-select-option [value]="null">Todos</ion-select-option>
+                        <ion-select-option [value]="true">Si</ion-select-option>
+                        <ion-select-option [value]="false">No</ion-select-option>
+                    </ion-select>
+                </ion-item>
+
+                <ion-item *ngIf="filtDisp == true">
+                    <ion-icon name="search" slot="start"></ion-icon>
+                    <ion-label position="stacked"> Código </ion-label>
+                    <ion-input (ionChange)="filtrarCodigo($event)" clear-input="true" debounce="500"></ion-input>
+                </ion-item>
+
+                <ion-item *ngIf="filtDisp == true">
+                    <ion-icon name="search" slot="start"></ion-icon>
+                    <ion-label position="stacked"> Concepto </ion-label>
+                    <ion-input (ionChange)="filtrarConcepto($event)" clear-input="true" debounce="500"></ion-input>
+                </ion-item>
+
+                <ion-item *ngIf="filtDisp == true">
+                    <ion-icon name="search" slot="start"></ion-icon>
+                    <ion-label position="stacked"> Ubicación origen </ion-label>
+                    <ion-input (ionChange)="filtrarArea($event)" clear-input="true" debounce="500"></ion-input>
+                </ion-item>
+
+                <ion-item *ngIf="filtDisp == true">
+                    <ion-icon name="search" slot="start"></ion-icon>
+                    <ion-label position="stacked"> Aspecto causante </ion-label>
+                    <ion-input (ionChange)="filtrarAspecto($event)" clear-input="true" debounce="500"></ion-input>
+                </ion-item>
+                <ion-spinner class="main-spinner" name="dots" *ngIf="loading == true" color="primary"></ion-spinner>
+
+                <ng-container *ngFor="let desv of desviacionesList; let idx = index;">
+                    <ion-card *ngIf="!desv.oculto">
+                        <ion-card-content>
+                            <div>
+                                <ion-item>
+                                    <div>
+                                        <ion-checkbox
+                                            [(ngModel)]="desv.selected"
+                                            (ionChange)="toggleSelect($event, desv, idx)"
+                                            [disabled]="desv.analizado"
+                                            *ngIf="desv.analisisId == null"
+                                        ></ion-checkbox>
+                                    </div>
+                                    <ng-container *sTienePermiso="['SEC_GET_ANADESV']">
+                                        <ion-button (click)="abrirAnalisis(desv, 'GET')" *ngIf="desv.analisisId != null" fill="clear">
+                                            <ion-icon slot="icon-only" name="search"></ion-icon>
+                                        </ion-button>
+                                    </ng-container>
+                                    <ng-container *sTienePermiso="['SEC_PUT_ANADESV']">
+                                        <ion-button color="success" (click)="abrirAnalisis(desv, 'PUT')" *ngIf="desv.analisisId != null" fill="clear">
+                                            <ion-icon slot="icon-only" name="create"></ion-icon>
+                                        </ion-button>
+                                    </ng-container>
+                                    <ion-button slot="end" (click)="pinDesv(desv, idx)" fill="clear" color="medium">
+                                        <ion-icon slot="icon-only" src="/assets/images/unpinned.svg"></ion-icon>
+                                    </ion-button>
+                                </ion-item>
+                                <p>{{desv.hashId}}</p>
+                                <h2 style="color: #333">{{desv.concepto}}</h2>
+                                <p>Ubicación origen: {{desv.area?.nombre}}</p>
+                                <p>{{desv.aspectoCausante}}</p>
+                            </div>
+                        </ion-card-content>
+                    </ion-card>
+                </ng-container>
+                <ion-button color="light" (click)="loadMore()" *ngIf="!this.disabled" expand="full" color="primary">Ver mas registros</ion-button>
+            </div>
+        </ion-slide>
+
+        <ion-slide id="fijos">
+            <div>
+                <ion-card *ngFor="let desv of desviacionesFavList; let idx = index;">
+                    <ion-card-content>
+                        <div class="desv-div">
+                            <ion-item>
+                                <div>
+                                    <ion-checkbox [(ngModel)]="desv.selected" (ionChange)="toggleSelect($event, desv, idx)" [disabled]="desv.analizado" *ngIf="desv.analisisId == null"></ion-checkbox>
+                                </div>
+                                <ng-container *sTienePermiso="['SEC_GET_ANADESV']">
+                                    <ion-button (click)="abrirAnalisis(desv, 'GET')" *ngIf="desv.analisisId != null" fill="clear">
+                                        <ion-icon slot="icon-only" name="search"></ion-icon>
+                                    </ion-button>
+                                </ng-container>
+                                <ng-container *sTienePermiso="['SEC_PUT_ANADESV']">
+                                    <ion-button color="success" (click)="abrirAnalisis(desv, 'PUT')" *ngIf="desv.analisisId != null" fill="clear">
+                                        <ion-icon slot="icon-only" name="create"></ion-icon>
+                                    </ion-button>
+                                </ng-container>
+                                <ion-button slot="end" (click)="unpinDesv(desv, idx)" fill="clear">
+                                    <ion-icon slot="icon-only" src="/assets/images/pinned.svg"></ion-icon>
+                                </ion-button>
+                            </ion-item>
+                            <p>{{desv.hashId}}</p>
+                            <h2 style="color: #333">{{desv.concepto}}</h2>
+                            <p>Area origen: {{desv.area?.nombre}}</p>
+                            <p>{{desv.aspectoCausante}}</p>
+                        </div>
+                    </ion-card-content>
+                </ion-card>
+            </div>
+        </ion-slide>
+    </ion-slides>
+
+    <ng-container *sTienePermiso="['SEC_POST_ANADESV']">
+        <ion-fab *ngIf="loading == false" vertical="bottom" horizontal="end" slot="fixed" [style.display]="segments['desviaciones'] ? 'block':'none'">
+            <ion-fab-button (click)="iniciarAnalisis()" [disabled]="desvListSelect == null || desvListSelect.length == 0">
+                <ion-icon name="search"></ion-icon>
+            </ion-fab-button>
+        </ion-fab>
+    </ng-container>
+</ion-content>

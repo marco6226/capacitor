@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="navegar('/app/home')">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Actas COPASST</ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+  <ion-item *ngFor="let acta of actasLocales;let idx = index">
+
+    <ion-spinner slot="end" *ngIf="acta['sync'] == true" name="dots" color="primary"></ion-spinner>
+    <ion-button *ngIf="acta['sync'] == null || acta['sync'] == false" slot="end" fill="clear" (click)="sincronizar(acta, idx)"
+      color="warning">
+      <ion-icon name="cloud-upload"></ion-icon>
+    </ion-button>
+
+
+    <ion-label>
+      <h2>{{ acta.nombre }}</h2>
+      <h3>{{ acta.area?.nombre }}</h3>
+      <p>{{ acta.descripcion }}</p>
+      <p>--/--/-- --:--</p>
+    </ion-label>
+  </ion-item>
+
+  <div *ngIf="loading == true">
+    <ion-spinner class="main-spinner" name="dots" color="primary"></ion-spinner>
+  </div>
+
+  <div *ngIf="actasCargadas == false">
+    <p style="color:#888;padding:25px">
+      No fue posible cargar las actas.
+      <a (click)="cargarActas()">Reintentar</a>
+    </p>
+  </div>
+
+  <ion-item *ngFor="let acta of actasList" (click)="abrirModal(acta)">
+    <ion-label>
+      <h2>{{ acta.nombre }}</h2>
+      <h3>{{ acta.area?.nombre }}</h3>
+      <p>{{ acta.descripcion }}</p>
+      <p>{{ acta.fechaElaboracion | date: 'dd/MM/yyyy HH:mm' }}</p>
+    </ion-label>
+  </ion-item>
+  <div style="height: 75px;"></div>
+
+  <ion-fab *ngIf="loading == false" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button *ngIf="visibleAdd" (click)="abrirDlgForm()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

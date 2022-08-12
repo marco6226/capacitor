@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar>
+    
+  <ion-item lines="none" (click)="navegar('/app/login')" class="irlogin">
+    <ion-label >
+      SIGESS
+    </ion-label>
+  </ion-item>
+  
+    
+    <ion-item size="small" slot="end" shape="round" class="campana" (click)="navegar('/app/sec/misTareas/1')"><ion-icon name="notifications-outline"></ion-icon></ion-item>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item button (click)="navegar('/app/inp/elaboracionInspeccion')" *sTienePermiso="['INP']">
+    <ion-icon slot="start" src="/assets/images/inp.svg" class="nostroke"></ion-icon>
+    <ion-label>{{nombreInp}}</ion-label>
+  </ion-item>
+
+  <ion-item button (click)="navegar('/app/auc/reporteObservacion')" *sTienePermiso="['AUC']">
+    <ion-icon slot="start" src="/assets/images/auc.svg" class="nostroke"></ion-icon>
+    <ion-label>{{nombreAuc}}</ion-label>
+  </ion-item>
+
+  <ion-item button (click)="navegar('/app/cop/consultaActas')" *sTienePermiso="['COP']">
+    <ion-icon slot="start" src="/assets/images/cop.svg" class="nostroke"></ion-icon>
+    <ion-label>{{nombreCop}}</ion-label>
+  </ion-item>
+
+  <ion-item button (click)="navegar('/app/sec/secInicio')" *sTienePermiso="['SEC']">
+    <ion-icon slot="start" src="/assets/images/sec.svg" class="nostroke"></ion-icon>
+    <ion-label>{{nombreSec}}</ion-label>
+  </ion-item>
+
+  <ion-item button (click)="navegar('/app/ind/consultaTablero')" *sTienePermiso="['IND']">
+    <ion-icon slot="start" src="/assets/images/ind.svg" class="nostroke"></ion-icon>
+    <ion-label>{{nombreInd}}</ion-label>
+  </ion-item>
+
+  <ion-item button (click)="navegar('/app/ayuda')" *sTienePermiso="['CONF_GET_MANUSR']">
+    <ion-icon slot="start" name="help"></ion-icon>
+    <ion-label>Ayuda</ion-label>
+  </ion-item>
+
+</ion-content>
+
+<ion-footer color="light">
+  <ion-item button (click)="actualizar()" *ngIf="versionDisponible > version">
+    <ion-icon slot="start" name="arrow-round-up" color="primary"></ion-icon>
+    <div style="width: 100%;font-size: 14px;">
+      <p style="float: left;color:#3ba2dc">Versión v{{versionDisponible}} disponible</p>
+      <p style="float: right;color:#aaa;">v{{version}}</p>
+    </div>
+  </ion-item>
+  <ion-item >
+    <div style="width: 100%;font-size: 14px;">
+      <p style="float: right;color:#aaa;">v{{version}}</p>
+    </div>
+  </ion-item>
+  <a href="whatsapp://send?phone=+573177613792" class="btn-wsp" target="_blank">
+    
+    <ion-icon class="btn-wsp2" name="logo-whatsapp" size="medium"></ion-icon>Soporte Técnico
+      
+  </a>
+</ion-footer>

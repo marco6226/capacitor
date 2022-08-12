@@ -1,0 +1,28 @@
+<ion-item (click)="openModal()">
+    <ion-label position="stacked">Ubicación:</ion-label>
+    <p style="width: 100%; margin-top: 16px; margin-bottom: 16px" *ngIf="areasCargadas == true">{{ value?.nombre }}</p>
+
+    <div *ngIf="loading == true">
+        <ion-spinner slot="end" name="dots" color="primary"></ion-spinner>
+    </div>
+    <div *ngIf="areasCargadas == false">
+        <p style="color: #888">
+            No fue posible cargar el listado
+            <a *ngIf="areasCargadas == false" (click)="cargarAreas()">Reintentar</a>
+        </p>
+    </div>
+</ion-item>
+
+<div id="modalNode" class="modal" [style.display]="visibleModal == true ? 'block' : 'none'">
+    <div class="modal-header radio-top-bordes">
+        <ion-searchbar class="radio-top-bordes" placeholder="Buscar ubicación" debounce="500" (ionChange)="filtrar($event)"></ion-searchbar>
+    </div>
+    <div class="modal-container">
+        <sm-tree *ngIf="areasFiltradas == null" [nodes]="areas" field="areaList" label="nombre" [single]="true"></sm-tree>
+        <sm-tree *ngIf="areasFiltradas != null" [nodes]="areasFiltradas" field="areaList" label="nombre" [single]="true"></sm-tree>
+    </div>
+    <div class="modal-footer radio-bottom-bordes">
+        <ion-button slot="end" fill="clear" (click)="aceptar()"> Aceptar </ion-button>
+        <ion-button slot="end" fill="clear" (click)="cancelar()" color="medium"> Cancelar </ion-button>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-buttons slot="start">
+          <ion-button (click)="anterior()">
+              <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+          </ion-button>
+      </ion-buttons>
+      <ion-title>Detalle Tarea</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment (ionChange)="segmentChanged($event)" value="general">
+    <ion-segment-button value="general">
+      <ion-label>General</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="seguimientos">
+      <ion-label>Seguimientos</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="cierre">
+      <ion-label>Cierre<ion-badge></ion-badge>
+      </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-label [style.display]="segments['general'] ? 'block':'none'">uno</ion-label>
+  
+  <ion-label [style.display]="segments['seguimientos'] ? 'block':'none'">dos</ion-label>
+  <ion-label [style.display]="segments['cierre'] ? 'block':'none'">tressss</ion-label>
+</ion-content>

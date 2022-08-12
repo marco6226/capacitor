@@ -1,0 +1,57 @@
+<form [formGroup]="form">
+  <ion-grid>
+    <ion-row>      
+      <p>{{formulario.nombre}}</p>
+    </ion-row>
+    <ion-row>
+      <ng-template ngFor let-campo [ngForOf]="formulario.campoList" let-i="index">
+        <ion-col size-xs="12" size-sm="6" size-md="6" size-lg="4" size-xl="3">
+          <ion-item [ngSwitch]="campo.tipo">
+            <ion-label [title]="campo.descripcion" position="stacked">
+              {{campo.nombre}}<ng-container *ngIf="campo.requerido">*</ng-container>
+            </ion-label>
+
+            <ng-container *ngSwitchCase="'text'">
+              <ion-input [formControlName]="campo.id + '_' + campo.nombre"></ion-input>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'boolean'">
+              <ion-select [formControlName]="campo.id + '_' + campo.nombre" okText="Aceptar" cancelText="Cancelar">
+                <ion-select-option value="true">Si</ion-select-option>
+                <ion-select-option value="false">No</ion-select-option>
+              </ion-select>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'single_select'">
+              <ion-select [formControlName]="campo.id + '_' + campo.nombre" okText="Aceptar" cancelText="Cancelar">
+                <ion-select-option *ngFor="let item of campo.opciones" [value]="item">{{item}}</ion-select-option>
+              </ion-select>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'multiple_select'">
+              <ion-select multiple="true" [formControlName]="campo.id + '_' + campo.nombre" okText="Aceptar" cancelText="Cancelar">
+                <ion-select-option *ngFor="let item of campo.opciones" [value]="item">{{item}}</ion-select-option>
+              </ion-select>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'date'">
+              <ion-datetime cancelText="Cancelar" doneText="Ok"  max="2022" 
+                display-format="DD/MM/YYYY"
+                picker-format="DD, MMMM, YYYY"
+                monthNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre" 
+                [formControlName]="campo.id + '_' + campo.nombre"
+
+              ></ion-datetime>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'timestamp'">
+              <ion-datetime display-format="DD/MM/YYYY HH:mm" picker-format="YYY MMM DD HH mm" montNames='ENERO, FEBRERO, MARZO, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre' [formControlName]="campo.id + '_' + campo.nombre"></ion-datetime>
+            </ng-container>
+
+          </ion-item>
+        </ion-col>
+      </ng-template>
+    </ion-row>
+  </ion-grid>
+
+</form>

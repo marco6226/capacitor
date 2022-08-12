@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="navegar('/app/home')">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      MANUALES
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="loading == true">
+    <ion-spinner class="main-spinner" name="dots" color="primary"></ion-spinner>
+  </div>
+
+  <div *ngIf="cargaExitosa == false">
+    <p style="color:#888;padding:25px">
+      No fue posible cargar los manuales.
+      <a (click)="cargarManuales()">Reintentar</a>
+    </p>
+  </div>
+
+  <ion-list *ngIf="cargaExitosa == true">
+    <ion-item button *ngFor="let man of manuales;" (click)="abrir(man)">
+      <ion-icon slot="start" [name]="man.tipo == 'mp4' || man.tipo == 'webm' ? 'videocam' : 'book'"></ion-icon>
+      <div style="width: 100%;font-size: 14px;">
+        <h4>{{man.nombre}}</h4>
+        <p>{{man.descripcion}}</p>
+      </div>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
+
+<div class="modal" *ngIf="rutaVideo != null">
+  <div class="content">
+    <video controls="controls" preload="metadata" autoplay="autoplay" class="videoPlayer" controlsList="nodownload">
+      <source [src]="rutaVideo | safeBypass:'resourceUrl'" type="video/mp4" />
+    </video>
+  </div>
+</div>
+
+<ion-footer color="light" *ngIf="rutaVideo == null">
+  <ion-item button (click)="actualizar()" >
+    <ion-icon slot="start" name="arrow-round-up" color="primary"></ion-icon>
+    <div style="width: 100%;font-size: 14px;">
+      <p style="float: left;color:#3ba2dc">Nueva Versión {{versionDisponible}} disponible</p>
+      <p style="float: right;color:#aaa;">v{{version}}</p>
+    </div>
+  </ion-item>
+  <ion-item >
+    <div style="width: 100%;font-size: 14px;">
+      <p style="float: right;color:#aaa;">v{{version}}</p>
+    </div>
+  </ion-item>
+</ion-footer>

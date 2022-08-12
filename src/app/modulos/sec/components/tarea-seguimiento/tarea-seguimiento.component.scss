@@ -1,0 +1,48 @@
+.tarjeta{
+    width: 100%;
+}
+
+.tarjetaTitulo{
+    text-align: center;
+    align-items: center;
+    font-size: 24px;
+
+}
+
+.tarjetaContenido{
+    text-align: start;
+    width: 100%;
+}
+
+.subtitulos{
+    color: black;
+}
+
+.evidencia{
+    width: 60px;
+    height: 60px;
+}
+
+  ion-slides {
+    /* --bullet-background: #3ba2dc; */
+    --bullet-background: blue;
+    --bullet-background-active: red;
+ }
+
+ .select-modal {
+    background: rgba(0, 0, 0, 0.5) !important;
+    padding: 20% 10%  !important;
+ }
+
+ .contenedor{
+     bottom: 20px;
+ }
+
+ .contenedorCard{
+    margin: 20px 0px 20px 0px;
+ }
+ 
+ .ButtonFloat{
+     position: fixed;
+ }
+

@@ -1,0 +1,71 @@
+<div *ngIf="visible" class="main">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <ion-card>
+      <ion-grid style="background: #ffffff;">
+        <ion-row>
+          <ion-col size-xs="12">
+            <ion-list>
+              <ion-item>
+                <ion-label style="font-size: 24px"> Actualizar contraseña</ion-label>
+                <!-- <ion-button (click)="cerrar()" fill="clear" color="dark">
+                  <ion-icon slot="icon-only" name="close"></ion-icon>
+                </ion-button> -->
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Anterior contraseña</ion-label>
+                <ion-input [type]="oldPasswdVisible == true ? 'text':'password'" formControlName="oldPasswd" clearOnEdit="false"></ion-input>
+                <ion-button slot="end" fill="clear" (click)="toggleOldPasswdVisible()" [color]="oldPasswdVisible == true ? 'primary':'medium'">
+                  <ion-icon name="eye"></ion-icon>
+                </ion-button>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating">Nueva contraseña</ion-label>
+                <ion-input [type]="newPasswdVisible == true ? 'text':'password'" formControlName="newPasswd" clearOnEdit="false"></ion-input>
+                <ion-button slot="end" fill="clear" (click)="toggleNewPasswdVisible()" [color]="newPasswdVisible == true ? 'primary':'medium'">
+                  <ion-icon name="eye"></ion-icon>
+                </ion-button>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating">Confirmación contraseña</ion-label>
+                <ion-input [type]="newPasswdConfirmVisible == true ? 'text':'password'" formControlName="newPasswdConfirm" clearOnEdit="false"></ion-input>
+                <ion-button slot="end" fill="clear" (click)="toggleNewPasswdConfirmVisible()" [color]="newPasswdConfirmVisible == true ? 'primary':'medium'">
+                  <ion-icon name="eye"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </ion-list>
+            <br/>
+            <div class="div-note" *ngIf="!form.controls['newPasswd'].valid&&form.controls['newPasswd'].dirty">
+              <ion-note color="danger">
+                <strong>Nueva contraseña:</strong> {{form.controls['newPasswd'].errors.password}}
+              </ion-note><br/>
+            </div>
+            <div class="div-note" *ngIf="(form.controls['newPasswd'].value == form.controls['oldPasswd'].value) && form.controls['newPasswd'].dirty">
+              <ion-note color="danger">
+                <strong>Nueva contraseña:</strong> No puede ser igual a la anterior
+              </ion-note><br/>
+            </div>
+            <div class="div-note" *ngIf="form.controls['newPasswdConfirm'].value != form.controls['newPasswd'].value">
+              <ion-note color="danger">
+                <strong>Confirmación contraseña:</strong> Debe coincidir con la nueva contraseña
+              </ion-note>
+            </div>
+
+            <div padding style="text-align: center;">
+              <ion-button *ngIf="restaurando == false" color="primary" expand="full" type="submit" [disabled]="!form.valid 
+                        || (form.controls['newPasswdConfirm'].value != form.controls['newPasswd'].value 
+                        || (form.controls['newPasswd'].value == form.controls['oldPasswd'].value))">
+                ACTUALIZAR
+              </ion-button>
+              <div *ngIf="restaurando == true">
+                <ion-spinner slot="end" name="dots" color="primary"></ion-spinner>
+                <br/> Actualizando contraseña, por favor espere...
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+  </form>
+</div>

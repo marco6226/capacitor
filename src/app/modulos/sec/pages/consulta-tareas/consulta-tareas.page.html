@@ -1,0 +1,83 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="navegar('/app/sec/secInicio')">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Tareas asignadas</ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <div>
+    <ion-spinner slot="start" class="main-spinner" name="dots" color="primary" *ngIf="loading == true"></ion-spinner>
+  </div>
+
+  <ion-card *ngFor="let tarea of tareasList; let i = index">
+    <ion-card-header>
+      <ion-card-subtitle>
+        <div class="cabecera">
+          <ion-badge [ngClass]="{
+            'nueva':tarea.estado == 'NUEVO', 
+            'realizada':tarea.estado == 'REALIZADA', 
+            'finalizada':tarea.estado == 'FINALIZADA'
+          }">{{tarea.estado}}</ion-badge>
+        </div>
+
+        <p class="tarea-nombre">
+          {{tarea.nombre}}
+        </p>
+      </ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <strong>Tipo de acción:</strong>
+      <p>{{tarea.tipoAccion}}</p>
+      <strong>Descripción:</strong>
+      <p>{{tarea.descripcion}}</p>
+      <strong>Fecha proyectada:</strong>
+      <p>{{tarea.fechaProyectada | date:'dd-MMM-yyyy'}}</p>
+      <strong>{{tarea.areaResponsable?.tipoArea.nombre}}:</strong>
+      <p>{{tarea.areaResponsable?.nombre}}</p>
+      <strong *ngIf="tarea.usuarioRealiza?.email != null">Usuario realiza:</strong>
+      <p *ngIf="tarea.usuarioRealiza?.email != null">{{tarea.usuarioRealiza.email}} - {{tarea.fechaRealizacion | date:'dd/MMM/yyyy'}}</p>
+      <strong *ngIf="tarea.usuarioRealiza?.email != null">Observaciones usuario realiza:</strong>
+      <p *ngIf="tarea.usuarioRealiza?.email != null">{{tarea.observacionesRealizacion}}</p>
+      <strong *ngIf="tarea.usuarioVerifica?.email != null">Usuario verifica:</strong>
+      <p *ngIf="tarea.usuarioVerifica?.email != null">{{tarea.usuarioVerifica.email}} - {{tarea.fechaVerificacion | date:'dd/MMM/yyyy'}}</p>
+      <strong *ngIf="tarea.usuarioVerifica?.email != null">Observaciones usuario verifica:</strong>
+      <p *ngIf="tarea.usuarioVerifica?.email != null">{{tarea.observacionesVerificacion}}</p>
+
+      <ion-item *ngIf="tarea.estado == 'NUEVO' || tarea.estado == 'REALIZADA'">
+        <ion-label *ngIf="tarea.estado == 'NUEVO'" position="stacked">Reportar cumplimiento</ion-label>
+        <ion-label *ngIf="tarea.estado == 'REALIZADA'" position="stacked">Reportar verificación</ion-label>
+
+        <ion-textarea style="flex: 50%;" *ngIf="tarea.estado == 'NUEVO' && (tarea['loading'] == null || tarea['loading'] == false)"
+          [(ngModel)]="tarea.observacionesRealizacion" placeholder="Comentarios" maxlength="510"></ion-textarea>
+
+        <ion-textarea style="flex: 50%;" *ngIf="tarea.estado == 'REALIZADA' && (tarea['loading'] == null || tarea['loading'] == false)"
+          [(ngModel)]="tarea.observacionesVerificacion" placeholder="Comentarios" maxlength="510"></ion-textarea>
+
+        <div>
+          <ion-button slot="end" fill="clear" *ngIf="tarea.estado == 'NUEVO' && (tarea['loading'] == null || tarea['loading'] == false)"
+            (click)="abrirDlg(tarea, i, true)">
+            <ion-icon slot="icon-only" name="checkmark-circle"></ion-icon>
+          </ion-button>
+
+          <ion-button slot="end" fill="clear" *ngIf="tarea.estado == 'REALIZADA' && (tarea['loading'] == null || tarea['loading'] == false)"
+            (click)="abrirDlg(tarea, i, false)">
+            <ion-icon name="thumbs-up"></ion-icon>
+          </ion-button>
+
+          <ion-spinner slot="end" class="main-spinner" name="dots" color="primary" *ngIf="tarea['loading'] == true"></ion-spinner>
+        </div>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

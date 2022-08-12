@@ -1,0 +1,109 @@
+<ion-content>
+   <ion-slides #slider pager="true">
+      <ion-slide>
+         <ion-card class="tarjeta">
+            <ion-card-title>
+               <ion-item>
+                  <ion-label class="tarjetaTitulo"  color="primary" >Información de la desviación</ion-label>
+               </ion-item>
+             </ion-card-title>
+           <ion-card-content class="tarjetaContenido">
+              <ion-grid>
+                 <ion-row>
+                    <ion-col>
+                       <ion-label class="subtitulos">Módulo</ion-label>
+                       <td class="inputText">{{datosTarea?.module}}</td>
+                    </ion-col>
+                    <ion-col>
+                       <ion-label class="subtitulos">Fecha del reporte</ion-label>
+                       <td>{{datosTarea?.fecha_reporte|date:'dd-MM-yyyy'}}</td>
+                    </ion-col>
+                 </ion-row>   
+                 <br>
+              <ion-label class="subtitulos">Concepto</ion-label>
+              <td class="inputText" type="text">{{datosTarea?.concepto}}</td>   
+              <br>
+              <ion-label class="subtitulos">Descripción de la desviación</ion-label>
+              <td class="inputText">{{datosTarea?.aspecto_causante}}</td>
+              </ion-grid>
+           </ion-card-content>
+         </ion-card>
+      </ion-slide>
+
+      <ion-slide class="slider">
+         <ion-card class="tarjeta">
+            <ion-card-title>
+               <ion-item>
+                  <ion-label class="tarjetaTitulo" color="primary" >Tarea asignada</ion-label>
+               </ion-item>
+            </ion-card-title>              
+           <ion-card-content class="tarjetaContenido">
+              <ion-grid>
+                 <ion-row>
+                    <ion-col>
+                       <ion-label class="subtitulos">Tipo de Acción</ion-label>
+                       <td class="inputText">{{datosTarea?.tipo_accion}}</td>
+                    </ion-col>
+                    <ion-col>
+                       <ion-label class="subtitulos">Fecha de cierre</ion-label>
+                       <td>{{datosTarea?.fecha_proyectada | date:'dd-MM-yyyy'}}</td>
+                    </ion-col>
+                 </ion-row> 
+                 <ion-row>
+                  <ion-col>
+                     <ion-label class="subtitulos">Regional</ion-label>
+                     <td class="inputText">{{datosTarea?.regional}}</td>
+                  </ion-col>
+                  <ion-col>
+                     <ion-label class="subtitulos">Sede</ion-label>
+                     <td>{{datosTarea?.area}}</td>
+                  </ion-col>
+               </ion-row> 
+               <ion-row>
+                  <ion-col>
+                     <ion-label class="subtitulos">Responsable</ion-label>
+                     <td class="inputText">{{datosTarea?.empResponsable?.primer_nombre}} {{datosTarea?.empResponsable?.primer_apellido}}</td>
+                  </ion-col>
+                  <ion-col>
+                     <ion-label class="subtitulos">Correo</ion-label>
+                     <td>{{datosTarea?.email}}</td>
+                  </ion-col>
+               </ion-row>    
+                 <br>
+              <ion-label class="subtitulos">Jerarquia de control</ion-label>
+              <td class="inputText" type="text">{{datosTarea?.jerarquia}}</td>   
+              <br>
+              <ion-label class="subtitulos">Descripción de la actividad</ion-label>
+              <td class="inputText">{{datosTarea?.descripcion}}</td>
+              </ion-grid>
+           </ion-card-content>
+         </ion-card>
+      </ion-slide>
+
+      <ion-slide>
+         <ion-card class="tarjeta">
+            <ion-card-title>
+               <ion-item>
+                  <ion-label class="tarjetaTitulo" color="primary" >Evidencias</ion-label>
+               </ion-item>  
+            </ion-card-title>            
+           <ion-card-content class="tarjetaContenido">
+            <div>
+               <ion-list *ngIf="imagenesList?.length == 0" style="text-align: center;">
+                 <div>
+                   <ion-icon class="evidencia" name="eye-off"></ion-icon>            
+                 </div>
+               </ion-list>               
+               <ion-list *ngIf="imagenesList?.length > 0">
+                  <div *ngFor="let imagen of imagenesList">
+                     <ion-img [src]="imagen.source"></ion-img>
+                  </div>
+               </ion-list>
+             </div>      
+           </ion-card-content>
+         </ion-card>
+      </ion-slide>
+     
+   </ion-slides> 
+</ion-content>
+

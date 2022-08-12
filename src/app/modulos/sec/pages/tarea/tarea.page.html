@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-buttons slot="start">
+          <ion-button (click)="anterior()">
+              <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+          </ion-button>
+      </ion-buttons>
+      <ion-title>Detalle Tarea</ion-title>
+      <ion-chip class="chip" slot="end" fill="solid">
+        <ion-label [color]="color">
+          {{Estado}}
+        </ion-label>      
+      </ion-chip>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment (ionChange)="segmentChanged($event)" value="general">
+    <ion-segment-button value="general">
+      <ion-label>General</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="seguimientos">
+      <ion-label>Seguimientos</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="cierre">
+      <ion-label>Cierre<ion-badge></ion-badge>
+      </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-content [style.display]="segments['general'] ? 'block':'none'">
+    <app-tarea-general></app-tarea-general>
+  </ion-content>
+  
+  <ion-content [style.display]="segments['seguimientos'] ? 'block':'none'">
+    <app-tarea-seguimiento [value]="value" [Estado]="Estado" (isFollowExist)="isFollows($event)"></app-tarea-seguimiento>
+  </ion-content>
+
+  <ion-content [style.display]="segments['cierre'] ? 'block':'none'">
+    <app-tarea-cierre [Estado]="Estado" [value]="value" (DatosCierre)="getTarea($event)"></app-tarea-cierre>
+  </ion-content>  
+  <!-- <ion-content [style.display]="segments['cierre'] ? 'block':'none'">
+    <app-tarea-cierre [Estado]="Estado" [value]="value" (DatosCierre)="infoCierre($event)"></app-tarea-cierre>
+  </ion-content>   -->
+  
+</ion-content>
+
+<!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed" [style.display]="segments['seguimientos'] ? 'block':'none'" 
+         *ngIf="Estado!='Cerrada fuera de tiempo' && Estado!='Cerrada en el tiempo'">
+  <ion-fab-button (click)="agregarSeguimiento()">
+    <ion-icon name="add" ></ion-icon>
+  </ion-fab-button>
+  <ion-label></ion-label>
+</ion-fab> -->
+
+<!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed" [style.display]="segments['cierre'] ? 'block':'none'" 
+         *ngIf="Estado!='Cerrada fuera de tiempo' && Estado!='Cerrada en el tiempo' && isCierre">
+  <ion-fab-button (click)="guardarCierre()">
+    <ion-icon name="save" ></ion-icon>
+  </ion-fab-button>
+  <ion-label></ion-label>
+</ion-fab>
+
+
+<ion-fab *ngIf="Estado!='Cerrada fuera de tiempo' && Estado!='Cerrada en el tiempo' && !isCierre" 
+          vertical="bottom" horizontal="end" slot="fixed" class="buttonF" [style.display]="segments['cierre'] ? 'block':'none'">
+  <ion-fab-button (click)="agregarCierre()">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab> -->

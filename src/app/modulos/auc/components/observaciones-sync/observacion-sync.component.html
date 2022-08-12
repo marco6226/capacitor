@@ -1,0 +1,26 @@
+<ion-card *ngFor="let obs of obserList; let i = index">
+    <ion-item>
+        <ion-button *ngIf="obs['sync'] == null || obs['sync'] == false" fill="outline" (click)="sincronizar(obs, i)">
+            {{obs.fechaObservacion | date:'dd/MM/yyyy HH:mm'}}
+        </ion-button>
+
+        <ion-spinner *ngIf="obs['sync'] == true" class="main-spinner" name="dots" color="primary"></ion-spinner>
+
+        <ion-button *ngIf="obs['sync'] == null || obs['sync'] == false" fill="clear" slot="end" (click)="presentAlertConfirm(obs, i)"
+            color="medium">
+            <ion-icon name="close"></ion-icon>
+        </ion-button>
+    </ion-item>
+    <ion-card-header>
+        <ion-label>{{obs.tarjeta.nombre}}</ion-label>
+        <ion-card-subtitle>
+            {{obs.area.nombre}}
+        </ion-card-subtitle>
+        <ion-card-subtitle>
+            {{obs.tipoObservacion}}
+        </ion-card-subtitle>
+        <ion-card-subtitle>
+            {{obs.descripcion}}
+        </ion-card-subtitle>
+    </ion-card-header>
+</ion-card>

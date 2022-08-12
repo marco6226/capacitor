@@ -1,0 +1,59 @@
+<div *ngFor="let elem of value" st>
+ <table  width="100%">
+    <tr class="node4"   >
+
+      <td width="65px" style="text-align: center;">
+        <textarea pInputTextarea [(ngModel)]="elem.codigo" *ngIf="editable" placeholder="Código" maxlength="20" disabled></textarea>
+        <label *ngIf="!editable">{{nivelSeparator}}{{elem.codigo}}</label>
+      </td>
+
+      <td>
+        <textarea pInputTextarea [(ngModel)]="elem.nombre" *ngIf="editable" placeholder="Nombre" maxlength="255"></textarea>
+        <label *ngIf="!elem.calificable && !editable">{{elem.nombre}}</label>
+        <label *ngIf="elem.calificable && !editable" [title]="elem.descripcion" (click)="abrirEvidenciaElemento(elem)" class="clickeable">{{elem.nombre}}</label>
+      </td>
+
+      <td>
+        <textarea pInputTextarea [(ngModel)]="elem.descripcion" *ngIf="editable" placeholder="Descripción" maxlength="512"></textarea>
+        <label *ngIf="!editable">{{elem.descripcion}}</label>
+      </td>
+
+      <!--
+      <td style="width: 150px">
+        <p-multiSelect [options]="tiposHallazgo" [(ngModel)]="elem.tipoHallazgoList" optionLabel="nombre" defaultLabel="--Tipos Hallazgo--"
+          *ngIf="editable"></p-multiSelect>
+      </td>
+      -->
+      
+      <td width="10px">
+        <button pButton type="button" icon="fa fa-plus" (click)="addElemento(elem)" *ngIf="editable"></button>
+      </td>
+
+      <td width="10px">
+        <button pButton type="button" icon="fa fa-trash" class="ui-button-danger" (click)="removeElemento(value, elem)" *ngIf="editable"></button>
+      </td>
+
+      <ng-template ngFor let-opc [ngForOf]="opciones">
+        <td width="50px" align="center">
+          <label *ngIf="!elem.calificable">{{opc.nombre}}</label>
+            <ion-radio #radiobutton [id]="elem.id + '_' + opc.id" [name]="elem.codigo + elem.nombre" [value]="opc.id" 
+            [disabled]="disabled" tooltipPosition="left" [checked]="elem.calificacion?.opcionCalificacion.id == opc.id" 
+            *ngIf="elem.calificable"
+            ></ion-radio>
+          
+            <!-- [(ngModel)]="elem.calificacion?.opcionCalificacion.id"  [pTooltip]="opc.descripcion" [label]="" Eliminadas del ion radio inmediatamente superior -->
+        </td>
+      </ng-template>
+    </tr>
+    <tr>
+      <td [attr.colspan]="opciones?.length + 7">
+        <s-elemento-inspeccion-node [value]="elem.elementoInspeccionList" [opciones]="opciones" [editable]="false" [disabled]="true"
+          [nivelRiesgoList]="nivelRiesgoList" [diligenciable]="diligenciable" 
+          [tiposHallazgo]="tiposHallazgo"></s-elemento-inspeccion-node>
+      </td>
+      <!-- (onElementoClick)="emitirEventoSelecElemento($event); abrirInspeccion($event)"  Eliminados del componente inmediatamente anterior-->
+    </tr>
+  </table>
+</div>
+
+<!-- <div class="imagenes" *ngFor="imagenbes"></div> -->

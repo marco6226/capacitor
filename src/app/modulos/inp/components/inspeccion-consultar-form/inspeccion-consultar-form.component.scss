@@ -1,0 +1,83 @@
+
+.tarjeta{
+    width: 100%;
+    
+}
+
+.tarjetaTitulo{
+    text-align: center;
+    align-items: center;
+    font-size: 17px;
+    width: 100%;
+
+}
+
+.aprobar{
+    font-size: 10px !important;
+    padding:2px;
+}
+
+.tarjetaContenido{
+    text-align: start;
+    width: 98%;
+}
+
+.subtitulos{
+    color: black;
+    font-size: 12px;
+}
+
+.subtitulos2{
+    color: black;
+    font-size: 11px;
+    text-align: left;
+
+}
+.respuestas{
+    color: black;
+    font-size: 11px;
+    text-align: right;
+}
+
+.evidencia{
+    width: 60px;
+    height: 60px;
+}
+
+.iconSup{
+    margin-bottom: 60px;
+}
+
+.iconSupD{
+    margin-bottom: 120px;
+}
+
+ion-slides {
+    //--bullet-background: #3ba2dc;
+    --bullet-background: blue;
+    //--bullet-background-opacity: 1;
+    --bullet-background-active: red;
+    //--bullet-opacity: 1;
+    //--bullet-opacity-active: .1;
+    
+ } 
+ .swiper-pagination {
+ position: fixed !important;
+ text-align: center;
+ -webkit-transition: opacity .3s;
+ -o-transition: .3s opacity;
+ transition: opacity .3s;
+ -webkit-transform: translateZ(0);
+ transform: translateZ(0);
+ z-index: 10;
+ }
+
+ span.swiper-pagination-bullet {
+    opacity: 1 !important;
+}
+
+.validado{
+    position: fixed;
+    right: 12px;
+    margin-top: -208px;
+}

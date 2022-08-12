@@ -1,0 +1,423 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="anterior()">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Consulta de inspecciones</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+
+
+
+<ion-content>
+    <ion-slides pager="true">
+        
+       
+        <ion-slide>
+            
+                <ion-grid>
+                    <ion-row>
+                        <ion-col>
+                            
+                                <ion-item>
+                                  <ion-label class="subtitulos" color="primary">{{listaInspeccion?.nombre}}</ion-label>
+                                </ion-item>
+                                <ion-item style="white-space: pre-wrap !important;"> 
+                                  <ion-label class="subtitulos" color="primary">{{listaInspeccion?.codigo}}</ion-label>
+                                  <ion-label class="subtitulos" color="primary">Versión: {{listaInspeccion?.listaInspeccionPK.version}}</ion-label>
+                                </ion-item>
+                                <ion-item>
+                                  <ion-label class="subtitulos" color="primary">Ubicación: {{inspeccion?.area?.nombre}}</ion-label>
+                
+                                </ion-item>
+                                <ion-item>
+                                    <ion-label style="white-space: pre-wrap !important;" class="subtitulos" color="primary">{{listaInspeccion?.descripcion}}</ion-label>
+                                  </ion-item>
+                                  <div>
+                                    <ion-list *ngIf="imagenesList?.length == 0" style="text-align: center;">
+                                      <div>
+                                        <ion-icon class="evidencia" name="eye-off"></ion-icon>            
+                                      </div>
+                                    </ion-list>
+                                    
+                                    <ion-list *ngIf="imagenesList?.length > 0">
+                                      <ion-img [src]="imagenesList[0]?.source[0]"></ion-img>                  
+                                    </ion-list>
+                                  </div> 
+                                  
+                                  
+                                  <ion-item>
+                                    <ion-label style="white-space: pre-wrap !important;" class="subtitulos" color="primary">{{inspeccion?.listaInspeccion?.formulario?.nombre}}</ion-label>
+                                  </ion-item>
+                               
+                        </ion-col>
+                    </ion-row>
+
+                  <ion-row>
+                    <ion-col>
+                      <div> 
+                          <ion-item *ngFor="let campos of listaInspeccion?.formulario.campoList let respuestas of inspeccion?.respuestasCampoList">
+                            <ion-label style="white-space: pre-wrap !important;" class="subtitulos" color="primary">{{campos?.nombre}}</ion-label>
+                          </ion-item>
+                      </div>
+                    </ion-col>
+                    <ion-col>
+                      <div>
+                          <ion-item *ngFor="let respuestas of inspeccion?.respuestasCampoList">
+                        <ion-label style="white-space: pre-wrap !important;" class="subtitulos" color="primary">{{respuestas?.valor}}</ion-label>
+                    </ion-item></div>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <div>
+                          
+                            <ion-label  class="subtitulos" style="white-space: pre-wrap !important;">Código: INP-{{ inspeccion?.id }}</ion-label>
+                    </div>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                      <div>
+                          
+                        <ion-label  class="subtitulos" style="white-space: pre-wrap !important;">Realizada: {{ inspeccion?.fechaRealizada | date:"yyyy/MM/dd HH:mm"}}</ion-label>
+                    </div>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <div>
+                          
+                        <ion-label  class="subtitulos" style="white-space: pre-wrap !important;">Usuario Registra: {{ inspeccion?.usuarioRegistra?.email}}</ion-label>
+                    </div>
+                    </ion-col>
+                    
+                  </ion-row>
+                 
+                </ion-grid>
+              
+        </ion-slide> 
+         <ion-slide>
+            <ion-card class="tarjeta">
+                <ion-card-title>
+                    <ion-item>
+                        <ion-label class="tarjetaTitulo" color="primary">Elementos de inspeccion</ion-label>
+                    </ion-item>
+                </ion-card-title>
+                <ion-card-content class="tarjetaContenido">
+                    <div>
+                        <s-lista-inspeccion-form [value]="listaInspeccion?.elementoInspeccionList" [opciones]="listaInspeccion?.opcionCalificacionList"
+                        [editable]="false" [disabled]="consultar"  diligenciable="true" #listaInspeccionForm
+                        [usarNivelRiesgo]="listaInspeccion?.usarNivelRiesgo" 
+                        [usarTipoHallazgo]="listaInspeccion?.usarTipoHallazgo"></s-lista-inspeccion-form>
+                    </div>
+                </ion-card-content>
+            </ion-card>
+        </ion-slide>
+        
+        <ion-slide *ngIf="estado">
+          <ion-card class="tarjeta">
+            <ion-card-title>
+                <ion-item>
+                    <ion-label class="tarjetaTitulo" color="primary">Estado de la maquina</ion-label>
+                </ion-item>
+                <ion-card-content>
+                  <ion-item>
+                    <ion-label position="stacked">Estado</ion-label>
+                    <ion-select okText="Aceptar" cancelText="Cancelar" [(ngModel)]="equipo" value="Disponible">
+                        <ion-select-option *ngFor="let a of EstadoOptionList" [value]="a.label">{{ a.label }}</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                  <ion-item *ngIf="idEmpresa != '16'">
+                    <ion-label position="stacked">Observaciones:</ion-label>
+                    <ion-textarea maxlength="510" [(ngModel)]="observacion" [value]="observacion"></ion-textarea>
+                </ion-item> 
+                <!-- <ion-item> -->
+                  <ion-button shape="round" slot="start" [disabled]="isEmpleadoValid" color="primary" (click)="guardarEstadoMaquina()">
+                    <ion-icon slot="start" name="save"></ion-icon>
+                    <ion-label>Guardar</ion-label>
+                  </ion-button>
+                <!-- </ion-item> -->
+                </ion-card-content>
+            </ion-card-title>
+          </ion-card>
+        </ion-slide>
+
+        <ion-slide *ngIf="idEmpresa=='21'">
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-card class="tarjeta">
+                  <ion-card-title>
+                      <ion-item>
+                          <ion-label class="tarjetaTitulo" color="primary">Bitacora de la maquina</ion-label>
+                      </ion-item>
+                  </ion-card-title>
+      
+                      <ion-card-content>
+                        <form style="width:95%" [formGroup]="FormBitacora">
+                          <ion-item>
+                          
+                            <ion-label position="stacked">Fecha</ion-label>
+                            <ion-datetime
+                              [readonly]="true"
+                              cancelText="Cancelar"
+                              doneText="Ok"                      
+                              displayFormat="DD/MM/YYYY HH:mm"
+                              monthNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+                              [(ngModel)]="selectDateBitacora"
+                              [value]="selectDateBitacora | date:'yyyy/MM/dd HH:mm:ss'"
+                              firstDayOfWeek="1"
+                              formControlName="fecha" 
+                          ></ion-datetime>
+                          </ion-item>
+                          <ion-item>
+                            <ion-label position="stacked">Actividad</ion-label>
+                            <ion-input formControlName="actividad" [(ngModel)]="FormBitacora.value.actividad"></ion-input>
+                          </ion-item>
+                        </form>
+                        
+                        
+      
+                        <ion-button shape="round" slot="start" [disabled]="FormBitacora.invalid" color="primary" (click)="nuevoIngreso()">
+                          <ion-icon slot="start" name="save"></ion-icon>
+                          <ion-label>Añadir</ion-label>
+                        </ion-button>
+                      
+                      </ion-card-content>
+                      
+                </ion-card>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngIf="bitacoraList.length>0">
+              <ion-col>
+                <ion-card class="tarjeta">
+                  <ion-card-title>
+                    <ion-item>
+                        <ion-label class="tarjetaTitulo" color="primary">Historial</ion-label>
+                    </ion-item>
+                </ion-card-title>
+      
+                    <ion-card-content *ngFor="let bitacora of bitacoraList" style="border-bottom-style: groove">
+                     <!-- <ion-card-subtitle> -->
+                       <ion-item>
+                        <ion-item>
+                          <ion-label position="stacked">Fecha</ion-label>
+                          <ion-datetime
+                              [readonly]="true"                   
+                              displayFormat="DD/MM/YYYY"
+                              monthNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+                              [value]="bitacora.fecha | date:'yyyy/MM/dd'"
+                          ></ion-datetime>
+                         </ion-item>
+                    
+                        <ion-item>
+                          <ion-label position="stacked">Hora</ion-label>
+                          <ion-datetime
+                            [readonly]="true"                  
+                            displayFormat="HH:mm"
+                            monthNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+                            [value]="bitacora.fecha | date:'HH:mm'"
+                        ></ion-datetime>
+                        </ion-item>
+                       </ion-item>
+                       
+                      <ion-item>
+                        <ion-label position="stacked">Actividad</ion-label>
+                        <ion-input [readonly]="true" [value]="bitacora.observacion"></ion-input>
+                      </ion-item>
+                    
+                    </ion-card-content>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          
+
+          <!-- <ion-fab horizontal="end" vertical="bottom" slot="fixed" class="iconSup">
+            <ion-fab-button>
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-list side="top">
+              <ion-fab-button color="danger" class="ionfabDen">
+                <ion-icon name="close" (click)="guardarGestionObervacion('denegar')" color="light"></ion-icon>
+              </ion-fab-button>
+              <ion-label class="labelFloat">Denegar</ion-label>
+              <ion-fab-button color="success" class="ionfabAce">
+                <ion-icon name="checkmark" (click)="guardarGestionObervacion('aceptar')" color="light"></ion-icon>
+              </ion-fab-button>
+              <ion-label class="labelFloat">Aceptar</ion-label>    
+            </ion-fab-list>
+          </ion-fab>-->
+
+          <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed" >
+            <ion-fab-button (click)="onTarjetaEdit()">
+              <ion-icon name="create"></ion-icon>
+            </ion-fab-button>
+          </ion-fab>  -->
+
+
+         
+
+
+        </ion-slide>
+
+      <ion-slide *ngIf="idEmpresa=='21'">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+            
+          <form  style="width:95%" [formGroup]="FormHseq" *sTienePermiso="['HSE']">
+          <ion-card class="tarjeta">
+            <ion-card-title>
+                <ion-item>
+                    <ion-label class="tarjetaTitulo" color="primary">Visto Bueno Maquinaria</ion-label>
+                </ion-item>
+            </ion-card-title>
+            <ion-card-content class="tarjetaContenido">              
+              <ion-item>
+                  <ion-label class="subtitulos" color="primary">Concepto</ion-label>
+                  <ion-input class="inputText" formControlName="concepto" [(ngModel)]="FormHseq.value.concepto" [value]="FormHseq.value.concepto" readOnly="true"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label class="subtitulos" color="primary">Usuario que gestiono</ion-label>
+                  <ion-input class="inputText" formControlName="usuarioGestiona" [(ngModel)]="FormHseq.value.usuarioGestiona" [value]="FormHseq.value.usuarioGestiona" readonly="true"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label class="subtitulos" color="primary">Cargo</ion-label>
+                  <ion-input class="inputText" [(ngModel)]="FormHseq.value.cargo" formControlName="cargo" readOnly="true"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label class="subtitulos" color="primary">Fecha</ion-label>
+
+                  <ion-datetime
+                    locale="en-GB"
+                    [max]=" maxDateHse | date: 'yyyy-MM-dd'"
+                    [min]="minDateHse | date: 'yyyy-MM-dd'"  
+                    cancelText="Cancelar"
+                    doneText="Ok"                      
+                    displayFormat="DD/MM/YYYY"
+                    monthNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+                    [(ngModel)]="selectDateHse"
+                    [value]="selectDateHse|date:'yyyy/MM/dd HH:mm:ss'" 
+                    (ionFocus)="rangoFechaCierreHse($event)"
+                    firstDayOfWeek="1"
+                    formControlName="fecha" 
+                ></ion-datetime>
+
+                </ion-item>
+                <ion-item *ngIf="FormHseq.invalid">
+                  <ion-button shape="round" slot="start" [disabled]="isEmpleadoValid" color="success" (click)="botonAceptar('HSE')">
+                    <ion-icon slot="start" name="checkmark"></ion-icon>
+                    <ion-label>Aceptar</ion-label>
+                  </ion-button>
+                  <ion-button shape="round" slot="end" [disabled]="isEmpleadoValid" color="danger" (click)="botonDenegar('HSE')">
+                    <ion-icon slot="start" name="close"></ion-icon>
+                    <ion-label>Denegar</ion-label>
+                  </ion-button>
+                </ion-item>
+
+                <div *ngIf="!FormHseq.invalid && FormHseq.value.concepto=='Aceptado'">
+                  <ion-fab  class="validado">
+                    <ion-fab-button color="success" >
+                      <ion-icon name="checkmark"></ion-icon>
+                    </ion-fab-button>                      
+                  </ion-fab>
+                </div>
+                
+                <div *ngIf="!FormHseq.invalid && FormHseq.value.concepto=='Denegado' ">
+                  <ion-fab class="validado">
+                    <ion-fab-button color="danger" >
+                      <ion-icon name="close"></ion-icon>
+                    </ion-fab-button> 
+                  </ion-fab>
+                </div>
+                
+              </ion-card-content>
+            </ion-card>
+          </form>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+                 <form style="width:95%" [formGroup]="FormIng" *sTienePermiso="['INGENIERIA']">
+                  <ion-card class="tarjeta">
+                    <ion-card-title>
+                        <ion-item>
+                            <ion-label class="tarjetaTitulo" color="primary">Área encargada</ion-label>
+                        </ion-item>
+                    </ion-card-title>
+                    <ion-card-content class="tarjetaContenido">              
+                      <ion-item>
+                          <ion-label class="subtitulos" color="primary">Concepto</ion-label>
+                          <ion-input class="inputText" formControlName="concepto" [(ngModel)]="FormIng.value.concepto" [value]="FormIng.value.concepto" readOnly="true"></ion-input>
+                        </ion-item>
+                        <ion-item>
+                          <ion-label class="subtitulos" color="primary">Usuario que gestiono</ion-label>
+                          <ion-input class="inputText" formControlName="usuarioGestiona" [(ngModel)]="FormIng.value.usuarioGestiona" [value]="FormIng.value.usuarioGestiona" readonly="true"></ion-input>
+                        </ion-item>
+                        <ion-item>
+                          <ion-label class="subtitulos" color="primary">Cargo</ion-label>
+                          <ion-input class="inputText" [(ngModel)]="FormIng.value.cargo" formControlName="cargo" readOnly="true"></ion-input>
+                        </ion-item>
+                        <ion-item>
+                          <ion-label class="subtitulos" color="primary">Fecha</ion-label>
+        
+                          <ion-datetime
+                            locale="en-GB"
+                            [max]=" maxDateIngenieria | date: 'yyyy-MM-dd'"
+                            [min]="minDateIngenieria | date: 'yyyy-MM-dd'"  
+                            cancelText="Cancelar"
+                            doneText="Ok"                      
+                            displayFormat="DD/MM/YYYY"
+                            monthNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+                            [(ngModel)]="selectDateIngenieria"
+                            [value]="selectDateIngenieria|date:'yyyy/MM/dd HH:mm:ss'" 
+                            (ionFocus)="rangoFechaCierreIngenieria($event)"
+                            firstDayOfWeek="1"
+                            formControlName="fecha" 
+                        ></ion-datetime>
+        
+                        </ion-item>
+                        <ion-item *ngIf="FormIng.invalid">
+                          <ion-button shape="round" slot="start" [disabled]="isEmpleadoValid" color="success" (click)="botonAceptar('ING')">
+                            <ion-icon slot="start" name="checkmark"></ion-icon>
+                            <ion-label>Aceptar</ion-label>
+                          </ion-button>
+                          <ion-button shape="round" slot="end" [disabled]="isEmpleadoValid" color="danger" (click)="botonDenegar('ING')">
+                            <ion-icon slot="start" name="close"></ion-icon>
+                            <ion-label>Denegar</ion-label>
+                          </ion-button>
+                        </ion-item>
+        
+                        <div *ngIf="!FormIng.invalid && FormIng.value.concepto=='Aceptado'">
+                          <ion-fab  class="validado">
+                            <ion-fab-button color="success" >
+                              <ion-icon name="checkmark"></ion-icon>
+                            </ion-fab-button>                      
+                          </ion-fab>
+                        </div>
+                        
+                        <div *ngIf="!FormIng.invalid && FormIng.value.concepto=='Denegado' ">
+                          <ion-fab class="validado">
+                            <ion-fab-button color="danger" >
+                              <ion-icon name="close"></ion-icon>
+                            </ion-fab-button> 
+                          </ion-fab>
+                        </div>           
+                </ion-card-content>
+              </ion-card>
+            </form>
+          </ion-col>
+          </ion-row>
+        </ion-grid>
+    </ion-slide>
+</ion-slides>
+
+
+</ion-content>
+
+

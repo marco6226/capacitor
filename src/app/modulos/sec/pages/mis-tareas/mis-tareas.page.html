@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="navegar('/app/sec/secInicio')">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{titulo}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <div>
+    <ion-spinner slot="start" class="main-spinner" name="dots" color="primary" *ngIf="loading == true"></ion-spinner>
+  </div>
+  <ion-card *ngFor="let tarea of tareasList; let i = index">
+    
+
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <strong>Módulo:</strong>
+            <p>{{tarea.module}}</p>
+          </ion-col>
+          <ion-col>
+            <strong>Código:</strong>
+            <p>{{tarea.hash_id}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <strong>Estado:</strong>
+            <td class="p-text-center status" [ngClass]="{
+              'status--danger': tarea.estado === 'Vencida' || tarea.estado === 'Cerrada fuera de tiempo', 
+              'status--success': tarea.estado === 'Abierta' || tarea.estado === 'Cerrada en el tiempo',
+              'status--info': tarea.estado === 'En seguimiento',
+              'status--warning': tarea.estado === 'N/A'
+          }">{{tarea.estado}}</td>
+          </ion-col>
+          <ion-col>
+            <strong>Actividad:</strong>
+            <p>{{tarea.nombre}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <strong>Tipo de acción:</strong>
+            <p>{{tarea.tipo_accion}}</p>
+          </ion-col>
+          <ion-col>
+            <strong>Fecha proyectada de cierre:</strong>
+      <p>{{tarea.fecha_proyectada | date:'dd-MM-yyyy'}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <strong>Sede:</strong>
+            <p>{{tarea.area}}</p>
+          </ion-col>
+          <ion-col>
+            <strong>Responsable:</strong>
+            <p>{{tarea.empResponsable?.primer_nombre}} {{tarea.empResponsable?.primer_apellido}}</p>
+          </ion-col>
+        </ion-row>
+
+      </ion-grid> 
+      <ion-button shape="round" size="small" color="tertiary" slot="end" (click)="abrirTarea(tarea)">Consultar<ion-icon slot="icon-only" name="search" ></ion-icon></ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

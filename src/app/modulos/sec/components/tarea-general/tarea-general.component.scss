@@ -1,0 +1,58 @@
+
+.tarjeta{
+    width: 100%;
+}
+
+.tarjetaTitulo{
+    text-align: center;
+    align-items: center;
+    font-size: 24px;
+
+}
+
+.tarjetaContenido{
+    text-align: start;
+    width: 100%;
+}
+
+.subtitulos{
+    color: black;
+}
+
+.evidencia{
+    width: 60px;
+    height: 60px;
+}
+
+ion-slides {
+    //--bullet-background: #3ba2dc;
+    --bullet-background: blue;
+    //--bullet-background-opacity: 1;
+    --bullet-background-active: red;
+    //--bullet-opacity: 1;
+    //--bullet-opacity-active: .1;
+ } 
+/* 
+ .swiper-pagination {
+    position: fixed;
+    bottom: 220px;
+    padding-bottom: 3px;
+ } */
+
+ /* .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 1% !important;
+    background: green !important;
+    opacity: 1;
+}
+
+.swiper-pagination-bullet-active {
+    background: green;
+}
+ */
+/*  span.swiper-pagination-bullet.swiper-pagination-bullet-active{
+     background: green;
+     
+ } */

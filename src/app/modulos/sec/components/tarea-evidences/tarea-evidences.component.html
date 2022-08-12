@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="navegar()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Evidencias</ion-title>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+  <ion-card class="tarjeta">
+    <ion-card-title>
+       <ion-item>
+          <ion-label class="tarjetaTitulo" color="primary" >Evidencias</ion-label>
+       </ion-item>  
+    </ion-card-title>            
+   <ion-card-content class="tarjetaContenido" *ngFor="let evidence of evidences?.files">
+    <div>
+       <ion-list>
+          <div>
+             <ion-img [src]="convertImg(evidence)"></ion-img>
+          </div>
+       </ion-list>
+     </div>      
+   </ion-card-content>
+ </ion-card>
+</ion-content>
+

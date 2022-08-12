@@ -1,0 +1,24 @@
+<div [ngClass]="backingClass" class="main" (click)="hide()">
+  <div [ngClass]="msg?.tipoMensaje" class="container">
+    <div>
+      <table>
+        <tr>
+          <td [ngSwitch]="msg?.tipoMensaje">
+            <ion-icon *ngSwitchCase="'warn'" name="warning" class="icono"></ion-icon>
+            <ion-icon *ngSwitchCase="'info'" name="information-circle" class="icono"></ion-icon>
+            <ion-icon *ngSwitchCase="'error'" name="close-circle" class="icono"></ion-icon>
+            <ion-icon *ngSwitchCase="'success'" name="checkmark-circle" class="icono"></ion-icon>
+          </td>
+          <td>
+            <label style="font-size:22px;"> {{msg?.mensaje}}</label>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <p>{{msg?.detalle}}</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

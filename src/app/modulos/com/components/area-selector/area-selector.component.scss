@@ -1,0 +1,59 @@
+.modal{
+    display: block;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #00000077;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 100000;
+}
+
+.modal-container{
+    position: absolute;
+    width: 90%;
+    height: calc(90% - 102px);
+    background-color: #fff;
+    overflow: auto;
+    left: 5%;
+    top: calc(5% + 56px);
+    margin: auto;
+    padding: 10px;
+}
+
+.modal-header{
+    background-color: #fff;
+    height: 56px;
+    width: 90%;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    z-index: 100;
+}
+
+.radio-top-bordes{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.radio-bottom-bordes{
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.modal-footer{
+    background-color: #fff;
+    height: 46px;
+    width: 90%;
+    position: absolute;
+    bottom: 0px;
+    z-index: 100;
+    // box-shadow: 0px 0px 8px #aaa;
+    border-top: solid thin #ccc;
+    bottom: 5%;
+    left: 5%;
+}
+.modal-footer ion-button{
+    float: right;
+}
