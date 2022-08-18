@@ -5,7 +5,7 @@ import { ObservacionConsultarComponent } from './../auc/components/observacion-c
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule  } from '@angular/common/http';
 import { IonicModule } from '@ionic/angular';
 
 import { HttpInt } from './services/http-int.service';
@@ -38,7 +38,7 @@ import { FiltroModule } from '../inp/components/inspecciones-realizadas/filtro/f
 @NgModule({
     imports: [
         CommonModule, 
-        HttpModule, 
+        HttpClientModule, 
         FormsModule, 
         IonicModule, 
         ReactiveFormsModule, 

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { stringify } from 'querystring';
+// import { stringify } from 'querystring';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ElementoInspeccion } from '../../../entities/elemento-inspeccion';
 import { DirectorioService } from '../../../../ado/services/directorio.service';

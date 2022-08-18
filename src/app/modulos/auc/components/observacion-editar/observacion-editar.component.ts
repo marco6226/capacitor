@@ -7,8 +7,7 @@ import { SistemaCausaRaizService } from '../../../sec/services/sistema-causa-rai
 import { ObservacionService } from '../../services/observacion.service';
 import { DirectorioService } from '../../../ado/services/directorio.service';
 // import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { Camera } from '@capacitor/camera';
-
+import { Camera , CameraResultType, Photo} from '@capacitor/camera';
 import { StorageService } from '../../../com/services/storage.service';
 import { MensajeUsuarioService } from '../../../com/services/mensaje-usuario.service';
 import { OfflineService } from '../../../com/services/offline.service';
@@ -22,7 +21,7 @@ import { Util } from '../../../com/utils/util';
   selector: 'app-observacion-editar',
   templateUrl: './observacion-editar.component.html',
   styleUrls: ['./observacion-editar.component.scss'],
-  providers: [SistemaCausaRaizService, Camera, ObservacionService, DirectorioService],
+  providers: [SistemaCausaRaizService, ObservacionService, DirectorioService],
 })
 export class ObservacionEditarComponent implements OnInit {
   segments = { detalle: false, observ: true };
@@ -45,14 +44,33 @@ export class ObservacionEditarComponent implements OnInit {
   isVisible: boolean=true;
   formGet: FormGroup;
 
-  options: CameraOptions = {
+//   options: CameraOptions = {
+//       quality: 75,
+//       destinationType: this.camera.DestinationType.FILE_URI,
+//       encodingType: this.camera.EncodingType.JPEG,
+//       correctOrientation: true,
+//       mediaType: this.camera.MediaType.PICTURE,
+//       targetWidth: 960,
+//       targetHeight: 960,
+//   };
+image: Photo;
+imageElement = new Image();
+getPicture = async () => {
+    this.image = await Camera.getPhoto({
       quality: 75,
-      destinationType: this.camera.DestinationType.FILE_URI,
-      encodingType: this.camera.EncodingType.JPEG,
-      correctOrientation: true,
-      mediaType: this.camera.MediaType.PICTURE,
-      targetWidth: 960,
-      targetHeight: 960,
+      allowEditing: true,
+      resultType: CameraResultType.Uri
+    });
+    // image.webPath will contain a path that can be set as an image src.
+    // You can access the original file using image.path, which can be
+    // passed to the Filesystem API to read the raw data of the image,
+    // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
+    var imageUrl = this.image.webPath;
+    // Can be set to the src of an image now
+    // this.imageElement.src = imageUrl;
+    // let imgUrl = (<any>window).Ionic.WebView.convertFileSrc(imageData);
+    this.imagenes.push(imageUrl);
+    this.imagenes = this.imagenes.slice();
   };
 
   guardando: boolean;
@@ -67,7 +85,7 @@ export class ObservacionEditarComponent implements OnInit {
       private mensajeUsuarioService: MensajeUsuarioService,
       private directorioService: DirectorioService,
       private observacionService: ObservacionService,
-      private camera: Camera,
+    //   private camera: Camera,
       private offlineService: OfflineService,
       public fb: FormBuilder,
       public modalController: ModalController,
@@ -142,18 +160,36 @@ export class ObservacionEditarComponent implements OnInit {
       await alert.present();
   }
 
-  getPicture() {
-      this.camera
-          .getPicture(this.options)
-          .then((imageData) => {
-              let imgUrl = (<any>window).Ionic.WebView.convertFileSrc(imageData);
-              this.imagenes.push(imgUrl);
-              this.imagenes = this.imagenes.slice();
-          })
-          .catch((error) => {
-              console.error(error);
-          });
-  }
+//   getPicture() {
+//     Camera.getPhoto({
+//         quality: 90,
+//         allowEditing: true,
+//         resultType: CameraResultType.Uri
+//       });
+    //   this.image
+    //       .getPicture(this.image)
+    //       .then((imageData) => {
+    //           let imgUrl = (<any>window).Ionic.WebView.convertFileSrc(imageData);
+    //           this.imagenes.push(imgUrl);
+    //           this.imagenes = this.imagenes.slice();
+    //       })
+    //       .catch((error) => {
+    //           console.error(error);
+    //       });
+//   }
+
+// getPicture() {
+//     this.camera
+//         .getPicture(this.options)
+//         .then((imageData) => {
+//             let imgUrl = (<any>window).Ionic.WebView.convertFileSrc(imageData);
+//             this.imagenes.push(imgUrl);
+//             this.imagenes = this.imagenes.slice();
+//         })
+//         .catch((error) => {
+//             console.error(error);
+//         });
+// }
 
   buildList(field: string, tree: any[], list: any[]) {
       tree.forEach((node) => {

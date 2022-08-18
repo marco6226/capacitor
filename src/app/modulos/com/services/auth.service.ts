@@ -1,21 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpInt } from './http-int.service';
-import * as CryptoJS from 'crypto-js';
+import { AES } from "crypto-js";
+// import * as CryptoJS from 'crypto-js';
 import { endPoints } from '../../../../environments/environment';
 import { SesionService } from './sesion.service'
 import { Subject } from 'rxjs';
 import { NavController, AlertController } from '@ionic/angular';
 import { timeout, map } from 'rxjs/operators';
-import { resolve } from 'dns';
+
+// import { resolve } from 'dns';
 import { MensajeUsuarioService } from './mensaje-usuario.service';
-import { Route } from '@angular/compiler/src/core';
+// import { Route } from '@angular/compiler/sr/core';
+import { Route } from '@angular/router';
 import { Router } from '@angular/router';
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import "rxjs/add/observable/of";
 import "rxjs/add/operator/do";
 import "rxjs/add/operator/delay";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/catch";
+
 
 
 @Injectable()
@@ -102,7 +106,7 @@ export class AuthService {
 
   createHash(passw: string) {
     try {
-      return CryptoJS.SHA256(passw, "");
+      return CryptoJS.SHA256(passw, null);
     } catch (e) {
       console.log(e);
       return "";
@@ -240,7 +244,7 @@ export class AuthService {
     return new Promise( (resolve) => {
         this.httpInt
             .post(endPoint , body)
-             .map((res) => res)
+            .pipe(map((res) => res))
             .subscribe(
                 (res) => {
                     resolve(res);
@@ -257,7 +261,8 @@ sendNotificationObservacionDenegada(email: string, observacion) {
   return new Promise((resolve, reject) => {
       this.httpInt
           .post(endpoint, body)
-          .map((res) => res)
+          .pipe(
+           map((res) => res))
           .subscribe(
               (res) => resolve(res),
               (err) => reject(err)

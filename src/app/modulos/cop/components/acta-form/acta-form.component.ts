@@ -8,7 +8,8 @@ import { Util } from '../../../com/utils/util';
 import { File as FilePlugin, FileEntry } from '@ionic-native/file/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 
-import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+// import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { Camera , CameraResultType, Photo} from '@capacitor/camera';
 import { MensajeUsuarioService } from '../../../com/services/mensaje-usuario.service';
 import { ActaService } from '../../services/acta.service';
 import { DirectorioService } from '../../../ado/services/directorio.service';
@@ -23,15 +24,15 @@ import { Directorio } from '../../../ado/entities/directorio';
 })
 export class ActaFormComponent implements OnInit {
 
-  options: CameraOptions = {
-    quality: 75,
-    destinationType: this.camera.DestinationType.FILE_URI,
-    encodingType: this.camera.EncodingType.JPEG,
-    correctOrientation: true,
-    mediaType: this.camera.MediaType.PICTURE,
-    targetWidth: 960,
-    targetHeight: 960,
-  }
+  // options: CameraOptions = {
+  //   quality: 75,
+  //   destinationType: this.camera.DestinationType.FILE_URI,
+  //   encodingType: this.camera.EncodingType.JPEG,
+  //   correctOrientation: true,
+  //   mediaType: this.camera.MediaType.PICTURE,
+  //   targetWidth: 960,
+  //   targetHeight: 960,
+  // }
 
 
   @ViewChild('fileChooser') fileChooser: HTMLInputElement;
@@ -53,7 +54,7 @@ export class ActaFormComponent implements OnInit {
     private dirService: DirectorioService,
     private actaService: ActaService,
     private msgService: MensajeUsuarioService,
-    private camera: Camera,
+    // private camera: Camera,
     private file: FilePlugin,
     public offlineService: OfflineService,
     public alertController: AlertController,
@@ -141,19 +142,47 @@ export class ActaFormComponent implements OnInit {
     });
   }
 
-  getPicture() {
-    this.camera.getPicture(this.options)
-      .then(imageData => {
-        let pathFile = (<string>imageData);
-        let lastIndex = pathFile.lastIndexOf("/");
-        let fileName = pathFile.substring(lastIndex + 1, pathFile.length);
+  // getPicture() {
+  //   this.camera.getPicture(this.options)
+  //     .then(imageData => {
+  //       let pathFile = (<string>imageData);
+  //       let lastIndex = pathFile.lastIndexOf("/");
+  //       let fileName = pathFile.substring(lastIndex + 1, pathFile.length);
 
-        let url = (<any>window).Ionic.WebView.convertFileSrc(imageData);
-        Util.dataURLtoFile(url, fileName).then(
-          file => this.guardarArchivoLocal(file, fileName)
-        );
-      });
-  }
+  //       let url = (<any>window).Ionic.WebView.convertFileSrc(imageData);
+  //       Util.dataURLtoFile(url, fileName).then(
+  //         file => this.guardarArchivoLocal(file, fileName)
+  //       );
+  //     });
+  // }
+  image: Photo;
+imageElement = new Image();
+getPicture = async () => {
+    this.image = await Camera.getPhoto({
+      quality: 75,
+      allowEditing: true,
+      resultType: CameraResultType.Uri
+    });
+    // image.webPath will contain a path that can be set as an image src.
+    // You can access the original file using image.path, which can be
+    // passed to the Filesystem API to read the raw data of the image,
+    // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
+    var url = this.image.webPath;
+    // Can be set to the src of an image now
+    // this.imageElement.src = imageUrl;
+    // let imgUrl = (<any>window).Ionic.WebView.convertFileSrc(imageData);
+    // this.imagenes.push(imageUrl);
+    // this.imagenes = this.imagenes.slice();
+
+    let pathFile = (<string>url);
+    let lastIndex = pathFile.lastIndexOf("/");
+    let fileName = pathFile.substring(lastIndex + 1, url.length);
+
+    // let url = (<any>window).Ionic.WebView.convertFileSrc(imageUrl);
+    Util.dataURLtoFile(url, fileName).then(
+    file => this.guardarArchivoLocal(file, fileName) 
+    );
+  };
 
   guardarArchivoLocal(fileParam: File, fileName: string) {
     let dirPath = this.file.dataDirectory;

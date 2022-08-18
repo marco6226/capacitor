@@ -10,7 +10,8 @@ import { Criteria } from '../../../com/entities/filter';
 import { AlertController, ModalController } from '@ionic/angular';
 import { MensajeUsuarioService } from '../../../com/services/mensaje-usuario.service';
 import { ReporteObservacionPage } from '../../../auc/pages/reporte-observacion/reporte-observacion.page';
-import * as moment from "moment";
+import * as moment from 'moment';
+// import moment from 'moment';
 
 
 @Component({

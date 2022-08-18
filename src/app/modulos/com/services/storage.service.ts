@@ -94,7 +94,7 @@ export class StorageService {
     //********** INSPECCIONES ******************** */
 
     guardarInspeccion(inspeccion: Inspeccion): any {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             let sql = 'INSERT INTO inp_inspeccion_v2(hashid, body, empresa_id) VALUES (?, ?, ?)';
             this.database
                 .executeSql(sql, [inspeccion['hash'], JSON.stringify(inspeccion), this.getEmpresa().id])
@@ -117,7 +117,7 @@ export class StorageService {
     }
 
     guardarInspeccionPendiente(inspeccion: Inspeccion): any {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             let sql = 'INSERT INTO inp_inspeccion_pendiente_v2(hashid, body, empresa_id) VALUES (?, ?, ?)';
             this.database
                 .executeSql(sql, [inspeccion['hash'], JSON.stringify(inspeccion), this.getEmpresa().id])
@@ -127,7 +127,7 @@ export class StorageService {
     }
 
     actualizarInspeccionPendiente(inspeccion: Inspeccion): any {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             let sql = 'UPDATE inp_inspeccion_pendiente_v2 SET body = ? WHERE hashid = ?';
             this.database
                 .executeSql(sql, [JSON.stringify(inspeccion), inspeccion['hash']])
@@ -146,7 +146,7 @@ export class StorageService {
     }
 
     borrarInspeccionPendiente(inspeccion: Inspeccion): any {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
         this.database.executeSql('DELETE FROM inp_inspeccion_realizada_v2 WHERE hashid = ?', [inspeccion['hash']])
         .then(() => resolve())
                 .catch((err) => reject(err));
@@ -154,7 +154,7 @@ export class StorageService {
     }
 
     guardarInspeccionRealizada(inspeccion: Inspeccion): any {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             let sql = 'INSERT INTO inp_inspeccion_pendiente_v2(hashid, body, empresa_id) VALUES (?, ?, ?)';
             this.database
                 .executeSql(sql, [inspeccion['hash'], JSON.stringify(inspeccion), this.getEmpresa().id])
@@ -208,7 +208,7 @@ export class StorageService {
     }
 
     setListasInspeccion(listInspList: ListaInspeccion[]) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             listInspList.forEach((lista) => {
                 let sql = 'INSERT INTO inp_lista_inspeccion_v2(id, version, body, empresa_id) VALUES (?, ?, ?, ?)';
                 this.database.executeSql(sql, [lista.listaInspeccionPK.id, lista.listaInspeccionPK.version, JSON.stringify(lista), this.getEmpresa().id]);
@@ -237,7 +237,7 @@ export class StorageService {
     }
 
     setSistemaCausaInmediata(sistemaCausaInm: SistemaCausaInmediata[]) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             let values: any = ['INSERT INTO sec_sistema_causa_inmediata_v2(id, body, empresa_id) VALUES (?, ?, ?)'];
             sistemaCausaInm.forEach((sci) => {
                 values.push([sci.id, JSON.stringify(sci), this.getEmpresa().id]);
@@ -273,7 +273,7 @@ export class StorageService {
     }
 
     setDesviaciones(desviaciones: Desviacion[]) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             desviaciones.forEach((desv) => {
                 let sql = 'INSERT INTO sec_desviacion_v2(id, body, empresa_id) VALUES (?, ?, ?)';
                 this.database.executeSql(sql, [desv.hashId, JSON.stringify(desv), this.getEmpresa().id]);
@@ -306,7 +306,7 @@ export class StorageService {
      * Guarda las desviaciones "Favoritas" localmente
      */
     setDesviacionFav(desviaciones: Desviacion[]) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             desviaciones.forEach((desv) => {
                 let sql = 'INSERT INTO sec_desviacion_fav_v2(id, body, empresa_id) VALUES (?, ?, ?)';
                 this.database.executeSql(sql, [desv.hashId, JSON.stringify(desv), this.getEmpresa().id]);
@@ -319,7 +319,7 @@ export class StorageService {
      * Retira la desviacion especificada del listado de favoritos
      */
     borrarDesviacionFav(hashId: string) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             let sql = 'DELETE FROM sec_desviacion_fav_v2 WHERE id = ?';
             this.database.executeSql(sql, [hashId]);
             resolve();
@@ -339,7 +339,7 @@ export class StorageService {
     }
 
     setActasCopasst(actas: Acta[]) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             actas.forEach((acta) => {
                 let sql = 'INSERT INTO cop_acta_v2(id, body, empresa_id) VALUES (?, ?, ?)';
                 this.database.executeSql(sql, [acta.id, JSON.stringify(acta), this.getEmpresa().id]);
@@ -355,7 +355,7 @@ export class StorageService {
     }
 
     guardarSyncActaCopasst(acta: Acta) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             let sql = 'INSERT INTO cop_acta_sync_v2(hashId, body, empresa_id) VALUES (?, ?, ?)';
             this.database.executeSql(sql, [acta['hashId'], JSON.stringify(acta), this.getEmpresa().id]).then(() => resolve());
         });
@@ -380,7 +380,7 @@ export class StorageService {
     //********* OBSERVACION ES********** */
 
     guardarSyncObservacion(obser: Observacion) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             let sql = 'INSERT INTO auc_observacion_sync_v2(hashId, body, empresa_id) VALUES (?, ?, ?)';
             this.database.executeSql(sql, [obser['hashId'], JSON.stringify(obser), this.getEmpresa().id]).then(() => resolve());
         });
@@ -416,7 +416,7 @@ export class StorageService {
     }
 
     setSistemaCausaRaiz(sistemaCausaRaiz: SistemaCausaRaiz[]) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             sistemaCausaRaiz.forEach((scr) => {
                 let sql = 'INSERT INTO sec_sistema_causa_raiz_v2(id, body, empresa_id) VALUES (?, ?, ?)';
                 this.database.executeSql(sql, [scr.id, JSON.stringify(scr), this.getEmpresa().id]);
@@ -444,7 +444,7 @@ export class StorageService {
     }
 
     setAreas(areas: Area[]) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             areas.forEach((area) => {
                 let sql = 'INSERT INTO emp_area_v2(id, body, empresa_id) VALUES (?, ?, ?)';
                 this.database.executeSql(sql, [area.id, JSON.stringify(area), this.getEmpresa().id]);
@@ -473,7 +473,7 @@ export class StorageService {
     }
 
     setTarjetas(desviaciones: Desviacion[]) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             desviaciones.forEach((desv) => {
                 let sql = 'INSERT INTO auc_tarjeta_v2(id, body, empresa_id) VALUES (?, ?, ?)';
                 this.database.executeSql(sql, [desv.hashId, JSON.stringify(desv), this.getEmpresa().id]);
@@ -502,7 +502,7 @@ export class StorageService {
     }
 
     setSistemaNivelRiesgo(sistemaNR: SistemaNivelRiesgo[]) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             sistemaNR.forEach((snr) => {
                 let sql = 'INSERT INTO sec_sistema_nivel_riesgo_v2(id, body, empresa_id) VALUES (?, ?, ?)';
                 this.database.executeSql(sql, [snr.id, JSON.stringify(snr), this.getEmpresa().id]);
@@ -531,7 +531,7 @@ export class StorageService {
     }
 
     setProgramaciones(programaciones: Programacion[]) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             programaciones.forEach((prog) => {
                 let sql = 'INSERT INTO inp_programacion_v2(id, body, empresa_id) VALUES (?, ?, ?)';
                 this.database.executeSql(sql, [prog.id, JSON.stringify(prog), this.getEmpresa().id]);
@@ -540,7 +540,7 @@ export class StorageService {
         });
     }
     updateProgramacion(programacion: Programacion) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             this.database.executeSql('UPDATE inp_programacion_v2 SET body = ? WHERE id = ?', [JSON.stringify(programacion), programacion.id]).then(() => {
                 resolve();
             });
@@ -566,7 +566,7 @@ export class StorageService {
     }
 
     setSistemaCausaAdministrativa(sistemaCA: SistemaNivelRiesgo[]) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             sistemaCA.forEach((sca) => {
                 let sql = 'INSERT INTO sec_sistema_causa_administrativa_v2(id, body, empresa_id) VALUES (?, ?, ?)';
                 this.database.executeSql(sql, [sca.id, JSON.stringify(sca), this.getEmpresa().id]);
@@ -583,7 +583,7 @@ export class StorageService {
 
     //********** ANALISIS DESVIACIONES ******************** */
     guardarAnalisisDesviacion(analisis: AnalisisDesviacion): any {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             this.getAnalisisDesviacion(analisis.id).then((resp) => {
                 if (resp.count > 0) {
                     let sql = 'UPDATE sec_analisis_desviacion_v2 SET body = ? WHERE id = ?';
@@ -617,7 +617,7 @@ export class StorageService {
     }
 
     guardarAnalisisSync(analisis: AnalisisDesviacion): any {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             this.getAnalisisSync(analisis['hashId']).then((resp) => {
                 if (resp.count > 0) {
                     let sql = 'UPDATE sec_analisis_desv_sync_v2 SET body = ? WHERE hashId = ?';
@@ -669,7 +669,7 @@ export class StorageService {
     //**********  MANUALES **************** */
 
     setManualesUsuario(manuales: Manual[]) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             manuales.forEach((man) => {
                 let sql = 'INSERT INTO conf_manual_usuario_v2(id, body, empresa_id) VALUES (?, ?, ?)';
                 this.database.executeSql(sql, [man.id, JSON.stringify(man), this.getEmpresa().id]);

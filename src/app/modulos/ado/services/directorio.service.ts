@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { endPoints } from '../../../../environments/environment';
 import { ServiceCRUD } from '../../com/services/service-crud.service';
-import { RequestOptions } from '@angular/http';
+// import { RequestOptions } from '@angular/common/http';
 import { Directorio } from '../entities/directorio';
 import { Documento } from '../entities/documento';
 import { FilterQuery } from '../../com/entities/filter-query';

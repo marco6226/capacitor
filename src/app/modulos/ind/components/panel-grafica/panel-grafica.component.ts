@@ -7,6 +7,7 @@ import { OpcionesGraficaComponent } from '../../../com/components/opciones-grafi
 import { ModalController } from '@ionic/angular';
 import { Util } from '../../../com/utils/util';
 
+
 @Component({
   selector: 'sm-panelGrafica',
   templateUrl: './panel-grafica.component.html',

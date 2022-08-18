@@ -2,7 +2,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { SeguimientosService } from './../../services/seguimientos.service';
 import { Empleado } from './../../../emp/entities/empleado';
 import { Component, Input, OnInit, Output, OnChanges, SimpleChanges, EventEmitter, SecurityContext } from '@angular/core';
-import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+// import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { Camera , CameraResultType, Photo} from '@capacitor/camera';
 import { Criteria } from '../../../com/entities/filter';
 import { FilterQuery } from '../../../com/entities/filter-query';
 import { EmpleadoService } from '../../../com/services/empleado.service';
@@ -19,7 +20,9 @@ import { Util } from '../../../com/utils/util';
   selector: 'app-tarea-cierre',
   templateUrl: './tarea-cierre.component.html',
   styleUrls: ['./tarea-cierre.component.scss'],
-  providers: [Camera]
+  providers: [
+    // Camera
+  ]
 })
 export class TareaCierreComponent implements OnInit{
 
@@ -47,15 +50,15 @@ export class TareaCierreComponent implements OnInit{
   tareaForm: FormGroup;
 
   numMaxFotos: number;
-  options: CameraOptions = {
-    quality: 75,
-    destinationType: this.camera.DestinationType.FILE_URI,
-    encodingType: this.camera.EncodingType.JPEG,
-    correctOrientation: true,
-    mediaType: this.camera.MediaType.PICTURE,
-    targetWidth: 960,
-    targetHeight: 960,
-  };
+  // options: CameraOptions = {
+  //   quality: 75,
+  //   destinationType: this.camera.DestinationType.FILE_URI,
+  //   encodingType: this.camera.EncodingType.JPEG,
+  //   correctOrientation: true,
+  //   mediaType: this.camera.MediaType.PICTURE,
+  //   targetWidth: 960,
+  //   targetHeight: 960,
+  // };
   mimeType = {
     'U': {
         head: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -87,7 +90,7 @@ export class TareaCierreComponent implements OnInit{
   followImage: FollowImage;
 
   constructor(
-    private camera: Camera,
+    // private camera: Camera,
     private sesionService: SesionService,
     private empleadoService: EmpleadoService,
     public alertController: AlertController,
@@ -167,23 +170,37 @@ export class TareaCierreComponent implements OnInit{
   }
   
 
-  getPicture(){
-    this.camera
-      .getPicture(this.options)
-      .then((imageData) => {
-          let imgUrl= (<any>window).Ionic.WebView.convertFileSrc(imageData);
-          // console.log(imgUrl)
-          this.imagenes.push(imgUrl);
-          this.imagenes = this.imagenes.slice();
-          // console.log(this.imagenes)
-          this.caseImage=[];
-          this.imagePost();
-      })
-        .catch((error) => {
-            console.error(error);
-        });
-        // console.log(this.imagenes)
-}
+//   getPicture(){
+//     this.camera
+//       .getPicture(this.options)
+//       .then((imageData) => {
+//           let imgUrl= (<any>window).Ionic.WebView.convertFileSrc(imageData);
+//           // console.log(imgUrl)
+//           this.imagenes.push(imgUrl);
+//           this.imagenes = this.imagenes.slice();
+//           // console.log(this.imagenes)
+//           this.caseImage=[];
+//           this.imagePost();
+//       })
+//         .catch((error) => {
+//             console.error(error);
+//         });
+//         // console.log(this.imagenes)
+// }
+image: Photo;
+imageElement = new Image();
+getPicture = async () => {
+this.image = await Camera.getPhoto({
+    quality: 75,
+    allowEditing: true,
+    resultType: CameraResultType.Uri
+});
+var imageUrl = this.image.webPath;
+this.imagenes.push(imageUrl);
+this.imagenes = this.imagenes.slice();
+this.caseImage=[];
+this.imagePost();
+};
   
   async presentAlert(header: string, msg: string){
     const alert = await this.alertController.create({

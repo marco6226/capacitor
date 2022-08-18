@@ -22,8 +22,10 @@ import { RouteReuseStrategy } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
+// import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { SplashScreen } from '@capacitor/splash-screen';
+// import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { StatusBar, Style } from '@capacitor/status-bar';
 // import { Camera } from '@ionic-native/camera/ngx';
 import { Camera } from '@capacitor/camera';
 
@@ -43,7 +45,8 @@ import { StorageService } from './modulos/com/services/storage.service';
 import { SQLite, SQLiteDatabaseConfig, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { TienePermisoDirective } from './modulos/com/directives/tiene-permiso.directive';
 // import { FileTransfer } from '@ionic-native/file-transfer/ngx';
-import { AppVersion } from '@ionic-native/app-version/ngx';
+// import { AppVersion } from '@ionic-native/app-version/ngx';
+import { App } from '@capacitor/app';
 import { EmpleadoService } from './modulos/com/services/empleado.service';
 // import { AutoCompleteModule } from 'primeng/autocomplete';
 import { MisTareasPageModule } from './modulos/sec/pages/mis-tareas/mis-tareas.module';
@@ -95,14 +98,14 @@ import { AutoCompleteModule } from 'ionic4-auto-complete';
         CambioPasswdService,
         EmpleadoService,
         SesionService,
-        StatusBar,
-        SplashScreen,
+        // StatusBar,
+        // SplashScreen,
         Camera,
         AuthService,
         OfflineService,
         SQLite,
         StorageService,
-        AppVersion,
+        // AppVersion,
         NumeroEconomicoService,
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
         // { provide: SQLite, useClass: SQLiteMock },

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Console } from 'console';
+// import { Console } from 'console';
 import { FilterQuery } from '../../../com/entities/filter-query';
 import { OfflineService } from '../../../com/services/offline.service';
 import { StorageService } from '../../../com/services/storage.service';

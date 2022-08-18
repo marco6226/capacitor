@@ -2,7 +2,8 @@ import { Component, OnInit, Input, SecurityContext, ViewChild, Output, EventEmit
 import { ElementoInspeccion } from '../../entities/elemento-inspeccion';
 import { SistemaNivelRiesgo } from '../../../com/entities/sistema-nivel-riesgo';
 
-import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+// import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { Camera , CameraResultType, Photo} from '@capacitor/camera';
 import { OpcionCalificacion } from '../../entities/opcion-calificacion';
 import { OfflineService } from '../../../com/services/offline.service';
 import { Calificacion } from '../../entities/calificacion';
@@ -13,7 +14,9 @@ import { AlertController, IonSlides } from '@ionic/angular';
   selector: 'sm-preguntaInspeccion',
   templateUrl: './pregunta-inspeccion.component.html',
   styleUrls: ['./pregunta-inspeccion.component.scss'],
-  providers: [Camera]
+  providers: [
+    // Camera
+  ]
 })
 export class PreguntaInspeccionComponent implements OnInit {
 
@@ -32,21 +35,21 @@ export class PreguntaInspeccionComponent implements OnInit {
 
 
 
-  options: CameraOptions = {
-    quality: 75,
-    destinationType: this.camera.DestinationType.FILE_URI,
-    encodingType: this.camera.EncodingType.JPEG,
-    correctOrientation: true,
-    mediaType: this.camera.MediaType.PICTURE,
-    targetWidth: 960,
-    targetHeight: 960,
-  }
+  // options: CameraOptions = {
+  //   quality: 75,
+  //   destinationType: this.camera.DestinationType.FILE_URI,
+  //   encodingType: this.camera.EncodingType.JPEG,
+  //   correctOrientation: true,
+  //   mediaType: this.camera.MediaType.PICTURE,
+  //   targetWidth: 960,
+  //   targetHeight: 960,
+  // }
 
 
   constructor(
     public alertController: AlertController,
     private offlineService: OfflineService,
-    private camera: Camera,
+    // private camera: Camera,
   ) {
     this.numMaxFotos = this.offlineService.sessionService.getConfigParam('NUM_MAX_FOTO_INP');
   }
@@ -77,34 +80,63 @@ export class PreguntaInspeccionComponent implements OnInit {
   //     .catch(error => console.error(error));
   // }
 
-  getPicture() {
+  // getPicture() {
+  //   if (this.imagenes != null && this.imagenes.length >= this.numMaxFotos) {
+  //     this.presentAlert("Número máximo de fotografías alcanzado", "No es posible adjuntar mas de " + this.numMaxFotos + " fotografía(s) por hallazgo");
+  //     return;
+  //   }
+  //   this.camera.getPicture(this.options)
+  //     .then(imageData => {
+  //       let imgsUrls = this.elementoActual.calificacion['img_key'];
+  //       if (imgsUrls == null)
+  //         imgsUrls = [];
+
+  //       if (this.imagenes == null)
+  //         this.imagenes = [];
+
+  //       let imgUrl = (<any>window).Ionic.WebView.convertFileSrc(imageData);
+  //       imgsUrls.push(imgUrl);
+
+  //       // let imgKey = new Date().toISOString();
+  //       // imgsKeys.push(imgKey);
+  //       // localStorage.setItem(imgKey, imgUrl);
+
+  //       this.elementoActual.calificacion['img_key'] = imgsUrls;
+
+  //       this.imagenes.push(imgUrl);
+  //       this.imagenes = this.imagenes.slice();
+  //     }).catch(error => {
+  //       console.error(error);
+  //     });
+  // }
+
+  image: Photo;
+  imageElement = new Image();
+  getPicture = async () => {
     if (this.imagenes != null && this.imagenes.length >= this.numMaxFotos) {
       this.presentAlert("Número máximo de fotografías alcanzado", "No es posible adjuntar mas de " + this.numMaxFotos + " fotografía(s) por hallazgo");
       return;
     }
-    this.camera.getPicture(this.options)
-      .then(imageData => {
-        let imgsUrls = this.elementoActual.calificacion['img_key'];
-        if (imgsUrls == null)
-          imgsUrls = [];
+    this.image = await Camera.getPhoto({
+      quality: 75,
+      allowEditing: true,
+      resultType: CameraResultType.Uri
+    });
+    let imgsUrls = this.elementoActual.calificacion['img_key'];
+    if (imgsUrls == null)
+      imgsUrls = [];
 
-        if (this.imagenes == null)
-          this.imagenes = [];
+    if (this.imagenes == null)
+      this.imagenes = [];
 
-        let imgUrl = (<any>window).Ionic.WebView.convertFileSrc(imageData);
-        imgsUrls.push(imgUrl);
+      // let imgUrl = (<any>window).Ionic.WebView.convertFileSrc(imageData);
+      // imgsUrls.push(imgUrl);
+    let imgUrl = this.image.webPath;
+    imgsUrls.push(imgUrl);
 
-        // let imgKey = new Date().toISOString();
-        // imgsKeys.push(imgKey);
-        // localStorage.setItem(imgKey, imgUrl);
-
-        this.elementoActual.calificacion['img_key'] = imgsUrls;
-
-        this.imagenes.push(imgUrl);
-        this.imagenes = this.imagenes.slice();
-      }).catch(error => {
-        console.error(error);
-      });
+    this.elementoActual.calificacion['img_key'] = imgsUrls;
+    this.imagenes.push(imgUrl);
+    this.imagenes = this.imagenes.slice();
   }
 
   ngOnInit() {

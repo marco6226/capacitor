@@ -6,7 +6,7 @@ import { ObservacionService } from './../../services/observacion.service';
 import { OfflineService } from './../../../com/services/offline.service';
 import { ModalController, AlertController } from '@ionic/angular';
 import { Observacion } from '../../entities/observacion';
-import { url } from 'inspector';
+// import { url } from 'inspector';
 import { Criteria, Filter } from '../../../com/entities/filter';
 import { FilterQuery } from '../../../com/entities/filter-query';
 import { Tarjeta } from '../../entities/tarjeta';

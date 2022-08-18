@@ -7,7 +7,8 @@ import { DirectorioService } from '../../../ado/services/directorio.service';
 
 import { File as FilePlugin, FileEntry } from '@ionic-native/file/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
-import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+// import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { Camera , CameraResultType, Photo} from '@capacitor/camera';
 import { ModalController } from '@ionic/angular';
 import { ActaFormComponent } from '../../components/acta-form/acta-form.component';
 import { FilterQuery } from '../../../com/entities/filter-query';
@@ -25,20 +26,20 @@ import { MensajeUsuarioService } from '../../../com/services/mensaje-usuario.ser
     DirectorioService,
     FileOpener,
     FilePlugin,
-    Camera,
+    // Camera,
   ]
 })
 export class ConsultaActasPage implements OnInit {
 
-  options: CameraOptions = {
-    quality: 75,
-    destinationType: this.camera.DestinationType.FILE_URI,
-    encodingType: this.camera.EncodingType.JPEG,
-    correctOrientation: true,
-    mediaType: this.camera.MediaType.PICTURE,
-    targetWidth: 960,
-    targetHeight: 960,
-  }
+  // options: CameraOptions = {
+  //   quality: 75,
+  //   destinationType: this.camera.DestinationType.FILE_URI,
+  //   encodingType: this.camera.EncodingType.JPEG,
+  //   correctOrientation: true,
+  //   mediaType: this.camera.MediaType.PICTURE,
+  //   targetWidth: 960,
+  //   targetHeight: 960,
+  // }
 
   actasList: Acta[];
   actasLocales: Acta[];
@@ -52,7 +53,7 @@ export class ConsultaActasPage implements OnInit {
     private actaService: ActaService,
     private storageService: StorageService,
     private modalController: ModalController,
-    private camera: Camera,
+    // private camera: Camera,
     public offlineService: OfflineService,
     private router: Router,
   ) {

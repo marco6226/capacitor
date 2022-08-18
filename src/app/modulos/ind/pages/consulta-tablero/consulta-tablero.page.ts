@@ -10,7 +10,8 @@ import { ModeloGrafica } from '../../entities/modelo-grafica';
 import { Util } from '../../../com/utils/util';
 import { MensajeUsuarioService } from '../../../com/services/mensaje-usuario.service';
 import { HTMLSanitizerService } from '../../../com/services/html-sanitizer.service';
-import * as Chart from 'chart.js';
+// import * as Chart from 'chart.js';
+import { Chart } from 'chart.js';
 
 @Component({
     selector: 'sm-consultaTablero',
